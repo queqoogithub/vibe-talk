@@ -2,7 +2,7 @@
 
 import type { ChatMessage } from "@/lib/types";
 import CorrectionCard from "./CorrectionCard";
-import { User, Bot } from "lucide-react";
+import { User, Bot, PencilLine } from "lucide-react";
 
 interface Props {
   message: ChatMessage;
@@ -39,8 +39,9 @@ export default function ChatBubble({ message }: Props) {
         {/* Grammar Corrections */}
         {!isUser && message.corrections && message.corrections.length > 0 && (
           <div className="w-full space-y-2">
-            <p className="text-xs font-semibold text-pastel-pink-dark px-1">
-              📝 Grammar Tips
+            <p className="text-xs font-semibold text-pastel-pink-dark px-1 flex items-center gap-1">
+              <PencilLine size={12} />
+              Grammar Tips
             </p>
             {message.corrections.map((correction, idx) => (
               <CorrectionCard key={idx} correction={correction} />

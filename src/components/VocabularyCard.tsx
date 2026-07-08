@@ -4,10 +4,10 @@ import type { VocabWord } from "@/lib/types";
 import {
   ChevronLeft,
   ChevronRight,
-  Volume2,
   CheckCircle2,
   Eye,
   EyeOff,
+  BookOpen,
 } from "lucide-react";
 
 interface Props {
@@ -103,8 +103,9 @@ export default function VocabularyCard({
 
           {/* Examples */}
           <div className="space-y-2">
-            <p className="text-xs font-semibold text-pastel-text-light">
-              📖 Example Sentences
+            <p className="text-xs font-semibold text-pastel-text-light flex items-center gap-1">
+              <BookOpen size={13} />
+              Example Sentences
             </p>
             {word.examples.map((ex, idx) => (
               <div
@@ -119,8 +120,9 @@ export default function VocabularyCard({
 
         {/* Tap hint */}
         {!showMeaning && (
-          <p className="text-center text-xs text-pastel-text-light/50 mt-3">
-            แตะ 👁️ เพื่อดูความหมาย
+          <p className="text-center text-xs text-pastel-text-light/50 mt-3 flex items-center justify-center gap-1">
+            แตะ <Eye size={14} className="text-pastel-text-light/40" />{" "}
+            เพื่อดูความหมาย
           </p>
         )}
       </div>

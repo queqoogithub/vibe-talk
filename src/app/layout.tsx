@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+import PhoneFrame from "@/components/PhoneFrame";
 
 export const metadata: Metadata = {
   title: "Vibe Talk - English Practice",
@@ -38,9 +38,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className="min-h-screen pb-20 safe-area-bottom safe-area-top">
-        <main className="max-w-lg mx-auto px-4 pt-4 pb-6">{children}</main>
-        <BottomNav />
+      <body className="min-h-screen safe-area-bottom safe-area-top bg-pastel-cream">
+        <PhoneFrame>{children}</PhoneFrame>
       </body>
     </html>
   );

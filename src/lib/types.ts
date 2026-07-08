@@ -11,14 +11,14 @@ export type Scenario =
   | "free-talk";
 
 export const SCENARIO_LABELS: Record<Scenario, string> = {
-  "ordering-food": "🍽️ สั่งอาหาร",
-  "job-interview": "💼 สัมภาษณ์งาน",
-  "hotel-checkin": "🏨 เช็คอินโรงแรม",
-  "small-talk": "💬 Small Talk",
-  shopping: "🛍️ ช้อปปิ้ง",
-  "travel-directions": "🧭 ถามทาง",
-  "doctor-visit": "🏥 ไปหาหมอ",
-  "free-talk": "🎯 คุยอิสระ",
+  "ordering-food": "สั่งอาหาร",
+  "job-interview": "สัมภาษณ์งาน",
+  "hotel-checkin": "เช็คอินโรงแรม",
+  "small-talk": "Small Talk",
+  shopping: "ช้อปปิ้ง",
+  "travel-directions": "ถามทาง",
+  "doctor-visit": "ไปหาหมอ",
+  "free-talk": "คุยอิสระ",
 };
 
 export const SCENARIO_SYSTEM_PROMPTS: Record<Scenario, string> = {

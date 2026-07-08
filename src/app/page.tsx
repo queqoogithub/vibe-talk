@@ -16,7 +16,15 @@ import ScenarioSelector from "@/components/ScenarioSelector";
 import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
 import ConversationList from "@/components/ConversationList";
-import { Sparkles, MessageCircle, History, X, ArrowDown } from "lucide-react";
+import {
+  Sparkles,
+  MessageCircle,
+  History,
+  X,
+  ArrowDown,
+  AlertTriangle,
+  XCircle,
+} from "lucide-react";
 
 export default function ChatPage() {
   const {
@@ -87,7 +95,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-7rem)]">
+    <div className="flex flex-col flex-1 min-h-0">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -122,8 +130,9 @@ export default function ChatPage() {
       </div>
 
       {mounted && !hasKey && (
-        <div className="mb-3 p-3 rounded-2xl bg-pastel-yellow-light border border-pastel-yellow/40 text-xs text-pastel-text-light text-center">
-          ⚠️ Please set your DeepSeek API key in{" "}
+        <div className="mb-3 p-3 rounded-2xl bg-pastel-yellow-light border border-pastel-yellow/40 text-xs text-pastel-text-light text-center flex items-center justify-center gap-1.5">
+          <AlertTriangle size={14} className="text-pastel-yellow" />
+          Please set your DeepSeek API key in{" "}
           <a
             href="/settings"
             className="underline font-medium text-pastel-pink-dark"
@@ -135,8 +144,9 @@ export default function ChatPage() {
       )}
 
       {error && (
-        <div className="mb-3 p-3 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600">
-          ❌ {error}
+        <div className="mb-3 p-3 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600 flex items-center gap-1.5">
+          <XCircle size={14} className="flex-shrink-0" />
+          {error}
         </div>
       )}
 
@@ -163,7 +173,7 @@ export default function ChatPage() {
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto py-4 space-y-4"
+            className="flex-1 overflow-y-auto py-4 space-y-4 relative"
           >
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center px-6">
@@ -209,7 +219,7 @@ export default function ChatPage() {
           {showScrollButton && (
             <button
               onClick={scrollToBottom}
-              className="absolute bottom-24 right-8 p-2 rounded-full bg-white shadow-lg border border-pastel-border text-pastel-text-light hover:text-pastel-text transition-all z-10"
+              className="absolute bottom-4 right-4 p-2 rounded-full bg-white shadow-lg border border-pastel-border text-pastel-text-light hover:text-pastel-text transition-all z-10"
             >
               <ArrowDown size={18} />
             </button>

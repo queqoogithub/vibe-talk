@@ -2,7 +2,7 @@
 
 import type { GrammarCorrection } from "@/lib/types";
 import { ERROR_TYPE_LABELS } from "@/lib/types";
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, Lightbulb } from "lucide-react";
 
 interface Props {
   correction: GrammarCorrection;
@@ -22,14 +22,21 @@ export default function CorrectionCard({ correction }: Props) {
         <span className="line-through text-red-400 bg-red-50 px-1.5 py-0.5 rounded">
           {correction.original}
         </span>
-        <ArrowRight size={12} className="text-pastel-text-light flex-shrink-0" />
+        <ArrowRight
+          size={12}
+          className="text-pastel-text-light flex-shrink-0"
+        />
         <span className="text-green-600 bg-green-50 px-1.5 py-0.5 rounded font-medium">
           {correction.corrected}
         </span>
       </div>
 
-      <p className="text-pastel-text-light leading-relaxed mt-1">
-        💡 {correction.explanation}
+      <p className="text-pastel-text-light leading-relaxed mt-1 flex items-start gap-1">
+        <Lightbulb
+          size={12}
+          className="mt-0.5 flex-shrink-0 text-pastel-yellow"
+        />
+        {correction.explanation}
       </p>
     </div>
   );

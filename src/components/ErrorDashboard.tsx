@@ -1,8 +1,18 @@
 "use client";
 
-import type { ErrorDashboard as ErrorDashboardType, ErrorType } from "@/lib/types";
+import type {
+  ErrorDashboard as ErrorDashboardType,
+  ErrorType,
+} from "@/lib/types";
 import { ERROR_TYPE_LABELS } from "@/lib/types";
-import { BarChart3, MessageSquare, AlertTriangle, TrendingUp, RefreshCw } from "lucide-react";
+import {
+  BarChart3,
+  MessageSquare,
+  AlertTriangle,
+  TrendingUp,
+  RefreshCw,
+  Lightbulb,
+} from "lucide-react";
 
 const BAR_COLORS: Record<ErrorType, string> = {
   tense: "bg-pastel-pink",
@@ -76,7 +86,10 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
 
         {errorBreakdown.length === 0 ? (
           <div className="text-center py-6">
-            <TrendingUp size={32} className="mx-auto text-pastel-text-light/20 mb-2" />
+            <TrendingUp
+              size={32}
+              className="mx-auto text-pastel-text-light/20 mb-2"
+            />
             <p className="text-sm text-pastel-text-light">
               No errors recorded yet. Start chatting!
             </p>
@@ -119,12 +132,18 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
       {/* Insight */}
       {errorBreakdown.length > 0 && (
         <div className="bg-pastel-yellow-light/50 border border-pastel-yellow/30 rounded-2xl p-4">
-          <p className="text-xs text-pastel-text-light leading-relaxed">
-            💡 <span className="font-medium">จุดที่ควรฝึกเพิ่ม:</span>{" "}
-            {errorBreakdown[0] &&
-              `${ERROR_TYPE_LABELS[errorBreakdown[0].errorType]} — พบบ่อยที่สุด (${errorBreakdown[0].count} ครั้ง)`}
-            {errorBreakdown[1] &&
-              ` รองลงมาคือ ${ERROR_TYPE_LABELS[errorBreakdown[1].errorType]} (${errorBreakdown[1].count} ครั้ง)`}
+          <p className="text-xs text-pastel-text-light leading-relaxed flex items-start gap-1.5">
+            <Lightbulb
+              size={14}
+              className="mt-0.5 flex-shrink-0 text-pastel-yellow"
+            />
+            <span>
+              <span className="font-medium">จุดที่ควรฝึกเพิ่ม:</span>{" "}
+              {errorBreakdown[0] &&
+                `${ERROR_TYPE_LABELS[errorBreakdown[0].errorType]} — พบบ่อยที่สุด (${errorBreakdown[0].count} ครั้ง)`}
+              {errorBreakdown[1] &&
+                ` รองลงมาคือ ${ERROR_TYPE_LABELS[errorBreakdown[1].errorType]} (${errorBreakdown[1].count} ครั้ง)`}
+            </span>
           </p>
         </div>
       )}

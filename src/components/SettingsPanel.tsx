@@ -2,15 +2,26 @@
 
 import { useState, useEffect } from "react";
 import { getApiKey, setApiKey, hasApiKey } from "@/lib/deepseek";
-import { Key, CheckCircle2, ExternalLink, AlertCircle } from "lucide-react";
+import {
+  Key,
+  CheckCircle2,
+  ExternalLink,
+  AlertCircle,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
 export default function SettingsPanel() {
   const [key, setKey] = useState("");
   const [saved, setSaved] = useState(false);
   const [showKey, setShowKey] = useState(false);
+  const [hasKey, setHasKey] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setKey(getApiKey());
+    setHasKey(hasApiKey());
+    setMounted(true);
   }, []);
 
   const handleSave = () => {
@@ -48,9 +59,10 @@ export default function SettingsPanel() {
             />
             <button
               onClick={() => setShowKey(!showKey)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-pastel-text-light hover:text-pastel-text"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-pastel-text-light hover:text-pastel-text transition-colors"
+              aria-label={showKey ? "Hide" : "Show"}
             >
-              {showKey ? "Hide" : "Show"}
+              {showKey ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
           </div>
           <button
@@ -73,7 +85,7 @@ export default function SettingsPanel() {
           </button>
         </div>
 
-        {hasApiKey() && (
+        {mounted && hasKey && (
           <div className="flex items-center gap-1.5 mt-3 text-xs text-pastel-green">
             <CheckCircle2 size={13} />
             API key is configured
@@ -123,8 +135,8 @@ export default function SettingsPanel() {
         </h3>
         <p className="text-xs text-pastel-text-light leading-relaxed">
           แอปสำหรับฝึกสนทนาภาษาอังกฤษกับ AI Agent ในสถานการณ์จำลองต่างๆ
-          พร้อมระบบตรวจแกรมม่า ติดตามจุดที่ควรพัฒนา
-          และโหมดฝึกคำศัพท์อ้างอิง Oxford 3000
+          พร้อมระบบตรวจแกรมม่า ติดตามจุดที่ควรพัฒนา และโหมดฝึกคำศัพท์อ้างอิง
+          Oxford 3000
         </p>
         <div className="flex items-center gap-1.5 mt-3 text-xs text-pastel-text-light/60">
           <AlertCircle size={12} />

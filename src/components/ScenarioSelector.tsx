@@ -2,18 +2,34 @@
 
 import type { Scenario } from "@/lib/types";
 import { SCENARIO_LABELS } from "@/lib/types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Utensils,
+  Briefcase,
+  Hotel,
+  MessageCircle,
+  ShoppingBag,
+  MapPin,
+  Stethoscope,
+  Sparkles,
+} from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
-const SCENARIOS: Scenario[] = [
-  "free-talk",
-  "ordering-food",
-  "job-interview",
-  "hotel-checkin",
-  "small-talk",
-  "shopping",
-  "travel-directions",
-  "doctor-visit",
+import type { LucideIcon } from "lucide-react";
+
+const SCENARIOS: {
+  key: Scenario;
+  icon: LucideIcon;
+}[] = [
+  { key: "free-talk", icon: Sparkles },
+  { key: "ordering-food", icon: Utensils },
+  { key: "job-interview", icon: Briefcase },
+  { key: "hotel-checkin", icon: Hotel },
+  { key: "small-talk", icon: MessageCircle },
+  { key: "shopping", icon: ShoppingBag },
+  { key: "travel-directions", icon: MapPin },
+  { key: "doctor-visit", icon: Stethoscope },
 ];
 
 interface Props {
@@ -61,17 +77,18 @@ export default function ScenarioSelector({ current, onSelect }: Props) {
         className="flex gap-2 overflow-x-auto scrollbar-hide py-2 px-1 flex-1"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {SCENARIOS.map((s) => (
+        {SCENARIOS.map(({ key, icon: Icon }) => (
           <button
-            key={s}
-            onClick={() => onSelect(s)}
-            className={`flex-shrink-0 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-              current === s
+            key={key}
+            onClick={() => onSelect(key)}
+            className={`flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+              current === key
                 ? "bg-pastel-pink text-white shadow-md shadow-pastel-pink/30"
                 : "bg-white text-pastel-text-light hover:bg-pastel-pink-light/30 border border-pastel-border"
             }`}
           >
-            {SCENARIO_LABELS[s]}
+            <Icon size={16} />
+            {SCENARIO_LABELS[key]}
           </button>
         ))}
       </div>

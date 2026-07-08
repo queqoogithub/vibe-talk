@@ -8,7 +8,9 @@ import {
   Eye,
   EyeOff,
   BookOpen,
+  Volume2,
 } from "lucide-react";
+import { useState, useCallback } from "react";
 
 interface Props {
   word: VocabWord;
@@ -33,6 +35,20 @@ export default function VocabularyCard({
   onToggleMeaning,
   onMarkMastered,
 }: Props) {
+  const [speaking, setSpeaking] = useState(false);
+
+  const handleSpeak = useCallback(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(word.word);
+    utterance.lang = "en-US";
+    utterance.rate = 0.85;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+  }, [word.word]);
+
   return (
     <div className="bg-white rounded-3xl border border-pastel-border shadow-sm overflow-hidden">
       {/* Progress bar */}
@@ -79,10 +95,24 @@ export default function VocabularyCard({
 
         {/* Word */}
         <div className="text-center mb-4">
-          <h2 className="text-3xl font-bold text-pastel-text mb-1 tracking-tight">
-            {word.word}
-          </h2>
-          <p className="text-sm text-pastel-text-light">{word.phonetic}</p>
+          <div className="flex items-center justify-center gap-2">
+            <h2 className="text-3xl font-bold text-pastel-text tracking-tight">
+              {word.word}
+            </h2>
+            <button
+              onClick={handleSpeak}
+              disabled={speaking}
+              className={`p-2 rounded-xl transition-all ${
+                speaking
+                  ? "bg-pastel-pink-light text-pastel-pink-dark animate-pulse"
+                  : "bg-pastel-blue-light/50 text-pastel-blue-dark hover:bg-pastel-blue-light hover:scale-110"
+              }`}
+              title="ฟังเสียงคำศัพท์"
+            >
+              <Volume2 size={20} />
+            </button>
+          </div>
+          <p className="text-sm text-pastel-text-light mt-1">{word.phonetic}</p>
           <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-xs bg-pastel-purple-light text-pastel-purple-dark font-medium">
             {word.partOfSpeech}
           </span>

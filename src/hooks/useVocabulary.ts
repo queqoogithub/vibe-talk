@@ -25,6 +25,7 @@ export function useVocabulary() {
   const [showMeaning, setShowMeaning] = useState(false);
   const [progress, setProgress] = useState<VocabProgress[]>([]);
   const [allWords, setAllWords] = useState<UserVocabWord[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const refreshWords = useCallback(async () => {
     const words = await getAllUserWords();
@@ -41,10 +42,21 @@ export function useVocabulary() {
     refreshProgress();
   }, [refreshWords, refreshProgress]);
 
+  // Filter by search query (case-insensitive, match word or thai meaning)
+  const searchedWords = useMemo(() => {
+    if (!searchQuery.trim()) return allWords;
+    const q = searchQuery.trim().toLowerCase();
+    return allWords.filter(
+      (w) =>
+        w.word.toLowerCase().includes(q) ||
+        w.thaiMeaning.toLowerCase().includes(q),
+    );
+  }, [allWords, searchQuery]);
+
   const baseWords =
     selectedCategory === "all"
-      ? allWords
-      : allWords.filter((w) => w.category === selectedCategory);
+      ? searchedWords
+      : searchedWords.filter((w) => w.category === selectedCategory);
 
   const words = useMemo(() => {
     if (masteryFilter === "all") return baseWords;
@@ -142,16 +154,30 @@ export function useVocabulary() {
     [refreshWords],
   );
 
+  // Check if a word already exists (case-insensitive)
+  const isDuplicate = useCallback(
+    (word: string, excludeId?: string): boolean => {
+      const lower = word.trim().toLowerCase();
+      return allWords.some(
+        (w) => w.word.toLowerCase() === lower && w.id !== excludeId,
+      );
+    },
+    [allWords],
+  );
+
   return {
     selectedCategory,
     masteryFilter,
     currentIndex,
     currentWord,
     words,
+    allWords,
     categories,
     showMeaning,
     masteredCount,
     totalCount: words.length,
+    searchQuery,
+    setSearchQuery,
     selectCategory,
     selectMasteryFilter,
     nextWord,
@@ -164,5 +190,6 @@ export function useVocabulary() {
     addWord,
     editWord,
     removeWord,
+    isDuplicate,
   };
 }

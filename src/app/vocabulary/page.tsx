@@ -13,6 +13,8 @@ import {
   CheckCircle2,
   Circle,
   Plus,
+  Search,
+  X,
 } from "lucide-react";
 
 export default function VocabularyPage() {
@@ -25,6 +27,8 @@ export default function VocabularyPage() {
     showMeaning,
     masteredCount,
     totalCount,
+    searchQuery,
+    setSearchQuery,
     selectCategory,
     selectMasteryFilter,
     nextWord,
@@ -36,6 +40,7 @@ export default function VocabularyPage() {
     addWord,
     editWord,
     removeWord,
+    isDuplicate,
   } = useVocabulary();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -81,6 +86,29 @@ export default function VocabularyPage() {
         >
           <Plus size={20} />
         </button>
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <Search
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-pastel-text-light/50"
+        />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="ค้นหาคำศัพท์หรือความหมาย..."
+          className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-pastel-border bg-white text-sm text-pastel-text placeholder-pastel-text-light/40 focus:outline-none focus:ring-2 focus:ring-pastel-pink-light focus:border-transparent"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-pastel-text-light/50 hover:text-pastel-text hover:bg-pastel-cream transition-colors"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
 
       {/* Progress */}
@@ -179,18 +207,22 @@ export default function VocabularyPage() {
             className="mx-auto text-pastel-text-light/20 mb-3"
           />
           <p className="text-sm text-pastel-text-light mb-1">
-            ยังไม่มีคำศัพท์ในหมวดนี้
+            {searchQuery ? "ไม่พบคำศัพท์ที่ค้นหา" : "ยังไม่มีคำศัพท์ในหมวดนี้"}
           </p>
           <p className="text-xs text-pastel-text-light/50 mb-4">
-            เพิ่มคำศัพท์แรกของคุณเพื่อเริ่มต้น
+            {searchQuery
+              ? "ลองค้นหาด้วยคำอื่น"
+              : "เพิ่มคำศัพท์แรกของคุณเพื่อเริ่มต้น"}
           </p>
-          <button
-            onClick={handleOpenAdd}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-pastel-pink text-white text-sm font-medium shadow-sm hover:bg-pastel-pink-dark transition-colors"
-          >
-            <Plus size={16} />
-            เพิ่มคำศัพท์
-          </button>
+          {!searchQuery && (
+            <button
+              onClick={handleOpenAdd}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-pastel-pink text-white text-sm font-medium shadow-sm hover:bg-pastel-pink-dark transition-colors"
+            >
+              <Plus size={16} />
+              เพิ่มคำศัพท์
+            </button>
+          )}
         </div>
       )}
 
@@ -200,6 +232,7 @@ export default function VocabularyPage() {
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
         editWord={editingWord}
+        isDuplicate={isDuplicate}
       />
     </div>
   );

@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { UserVocabWord, VocabCategory } from "@/lib/types";
 import { VOCAB_CATEGORY_LABELS } from "@/lib/types";
-import { inferWordInfo } from "@/lib/deepseek";
-import { X, Plus, Trash2, Sparkles, Loader2 } from "lucide-react";
+import { inferWordInfo, checkSpelling } from "@/lib/deepseek";
+import {
+  X,
+  Plus,
+  Trash2,
+  Sparkles,
+  Loader2,
+  AlertTriangle,
+  CheckCircle2,
+} from "lucide-react";
 
 interface Props {
   isOpen: boolean;
@@ -13,6 +21,7 @@ interface Props {
     word: Omit<UserVocabWord, "id" | "createdAt"> | UserVocabWord,
   ) => void;
   editWord?: UserVocabWord | null;
+  isDuplicate: (word: string, excludeId?: string) => boolean;
 }
 
 const CATEGORY_OPTIONS = Object.entries(VOCAB_CATEGORY_LABELS) as [
@@ -25,6 +34,7 @@ export default function AddWordModal({
   onClose,
   onSave,
   editWord,
+  isDuplicate,
 }: Props) {
   const [word, setWord] = useState("");
   const [phonetic, setPhonetic] = useState("");
@@ -35,6 +45,16 @@ export default function AddWordModal({
 
   const [inferring, setInferring] = useState(false);
   const [inferError, setInferError] = useState("");
+
+  // Spell check state
+  const [spellChecking, setSpellChecking] = useState(false);
+  const [spellSuggestions, setSpellSuggestions] = useState<string[]>([]);
+  const [spellCorrect, setSpellCorrect] = useState<boolean | null>(null);
+  const lastCheckedWord = useRef("");
+
+  // Duplicate warning
+  const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
+  const dismissedDuplicate = useRef(false);
 
   const isEditing = !!editWord;
 
@@ -55,12 +75,116 @@ export default function AddWordModal({
       setCategory("general");
     }
     setInferError("");
+    setSpellSuggestions([]);
+    setSpellCorrect(null);
+    lastCheckedWord.current = "";
+    setDuplicateWarning(null);
+    dismissedDuplicate.current = false;
   }, [editWord, isOpen]);
 
-  if (!isOpen) return null;
+  const checkDuplicate = (w: string): boolean => {
+    const excludeId = editWord?.id;
+    if (isDuplicate(w, excludeId)) {
+      setDuplicateWarning(`คำว่า "${w.trim()}" มีอยู่ในคลังคำศัพท์แล้ว`);
+      return true;
+    }
+    setDuplicateWarning(null);
+    return false;
+  };
+
+  const runSpellCheck = useCallback(async (w: string) => {
+    const trimmed = w.trim();
+    if (!trimmed || trimmed.length < 2) {
+      setSpellSuggestions([]);
+      setSpellCorrect(null);
+      return;
+    }
+
+    setSpellChecking(true);
+    setSpellSuggestions([]);
+    setSpellCorrect(null);
+    lastCheckedWord.current = trimmed;
+
+    try {
+      const result = await checkSpelling(trimmed);
+      if (lastCheckedWord.current === trimmed) {
+        setSpellCorrect(result.isCorrect);
+        setSpellSuggestions(result.isCorrect ? [] : result.suggestions);
+      }
+    } catch {
+      // silently ignore
+    } finally {
+      setSpellChecking(false);
+    }
+  }, []);
+
+  const handleWordChange = (value: string) => {
+    setWord(value);
+    if (lastCheckedWord.current !== value.trim()) {
+      setSpellSuggestions([]);
+      setSpellCorrect(null);
+    }
+    // Clear duplicate warning when user types
+    if (duplicateWarning) {
+      setDuplicateWarning(null);
+      dismissedDuplicate.current = false;
+    }
+  };
+
+  const handleWordBlur = () => {
+    if (word.trim() && word.trim() !== lastCheckedWord.current) {
+      runSpellCheck(word);
+    }
+  };
+
+  const handleSuggestionClick = async (suggestion: string) => {
+    setWord(suggestion);
+    setSpellSuggestions([]);
+    setSpellCorrect(true);
+    lastCheckedWord.current = suggestion;
+
+    // Check duplicate for the suggested word
+    if (checkDuplicate(suggestion)) return;
+
+    // Auto-fill after accepting suggestion
+    setInferring(true);
+    setInferError("");
+    try {
+      const info = await inferWordInfo(suggestion);
+      setPhonetic(info.phonetic);
+      setThaiMeaning(info.thaiMeaning);
+      setPartOfSpeech(info.partOfSpeech);
+      if (
+        info.category &&
+        CATEGORY_OPTIONS.some(([k]) => k === info.category)
+      ) {
+        setCategory(info.category as VocabCategory);
+      }
+      setExamples(info.examples.length > 0 ? info.examples : [""]);
+    } catch {
+      // ok
+    } finally {
+      setInferring(false);
+    }
+  };
 
   const handleAutoFill = async () => {
     if (!word.trim()) return;
+
+    // Check duplicate
+    if (checkDuplicate(word)) return;
+
+    // Run spell check first if not checked yet
+    if (spellCorrect === null && word.trim() !== lastCheckedWord.current) {
+      await runSpellCheck(word);
+      if (
+        lastCheckedWord.current === word.trim() &&
+        spellSuggestions.length > 0
+      ) {
+        return;
+      }
+    }
+
     setInferring(true);
     setInferError("");
     try {
@@ -82,9 +206,12 @@ export default function AddWordModal({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!word.trim() || !thaiMeaning.trim()) return;
+
+    // Check duplicate before saving
+    if (!dismissedDuplicate.current && checkDuplicate(word)) return;
 
     const filteredExamples = examples.filter((ex) => ex.trim() !== "");
     const wordData = {
@@ -105,6 +232,11 @@ export default function AddWordModal({
     onClose();
   };
 
+  const dismissDuplicate = () => {
+    dismissedDuplicate.current = true;
+    setDuplicateWarning(null);
+  };
+
   const addExample = () => setExamples([...examples, ""]);
   const removeExample = (idx: number) => {
     setExamples(examples.filter((_, i) => i !== idx));
@@ -113,8 +245,10 @@ export default function AddWordModal({
     setExamples(examples.map((ex, i) => (i === idx ? value : ex)));
   };
 
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
@@ -122,7 +256,7 @@ export default function AddWordModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full sm:max-w-md max-h-[90vh] bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-y-auto animate-slide-up">
+      <div className="relative w-full sm:max-w-md max-h-[90vh] bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-y-auto animate-slide-up pb-20 safe-area-bottom">
         <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-4 border-b border-pastel-border">
           <h2 className="text-lg font-bold text-pastel-text">
             {isEditing ? "แก้ไขคำศัพท์" : "เพิ่มคำศัพท์ใหม่"}
@@ -141,14 +275,87 @@ export default function AddWordModal({
             <label className="block text-xs font-semibold text-pastel-text-light mb-1">
               คำศัพท์ *
             </label>
-            <input
-              type="text"
-              value={word}
-              onChange={(e) => setWord(e.target.value)}
-              placeholder="เช่น: serendipity"
-              className="w-full px-3 py-2.5 rounded-xl border border-pastel-border bg-pastel-cream/30 text-sm text-pastel-text placeholder-pastel-text-light/40 focus:outline-none focus:ring-2 focus:ring-pastel-pink-light focus:border-transparent"
-              required
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={word}
+                onChange={(e) => handleWordChange(e.target.value)}
+                onBlur={handleWordBlur}
+                placeholder="เช่น: serendipity"
+                className={`w-full px-3 py-2.5 rounded-xl border bg-pastel-cream/30 text-sm text-pastel-text placeholder-pastel-text-light/40 focus:outline-none focus:ring-2 focus:ring-pastel-pink-light focus:border-transparent ${
+                  duplicateWarning
+                    ? "border-red-300 ring-2 ring-red-200"
+                    : "border-pastel-border"
+                }`}
+                required
+              />
+              {/* Spell check inline indicator */}
+              {spellChecking && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <Loader2
+                    size={16}
+                    className="animate-spin text-pastel-text-light/40"
+                  />
+                </div>
+              )}
+              {!spellChecking &&
+                spellCorrect === true &&
+                word.trim() === lastCheckedWord.current && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <CheckCircle2 size={16} className="text-pastel-green" />
+                  </div>
+                )}
+              {!spellChecking &&
+                spellCorrect === false &&
+                word.trim() === lastCheckedWord.current && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <AlertTriangle size={16} className="text-amber-400" />
+                  </div>
+                )}
+            </div>
+
+            {/* Duplicate warning */}
+            {duplicateWarning && (
+              <div className="mt-2 p-3 rounded-xl bg-red-50 border border-red-200">
+                <p className="text-xs text-red-500 mb-2 flex items-center gap-1">
+                  <AlertTriangle size={12} />
+                  {duplicateWarning}
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={dismissDuplicate}
+                    className="px-3 py-1.5 rounded-lg bg-white border border-red-300 text-xs font-medium text-pastel-text hover:bg-red-50 transition-colors"
+                  >
+                    เพิ่มต่อไป (ไม่สนใจ)
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Spell suggestions */}
+            {!spellChecking &&
+              spellCorrect === false &&
+              spellSuggestions.length > 0 && (
+                <div className="mt-2 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                  <p className="text-xs text-amber-600 mb-2 flex items-center gap-1">
+                    <AlertTriangle size={12} />
+                    คำนี้ดูเหมือนจะสะกดผิด — ลองเลือกคำที่ถูกต้อง:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {spellSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => handleSuggestionClick(s)}
+                        className="px-3 py-1.5 rounded-lg bg-white border border-amber-300 text-sm font-medium text-pastel-text hover:bg-pastel-green-light/30 hover:border-pastel-green transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
 
           {/* Auto-fill button */}
@@ -280,7 +487,7 @@ export default function AddWordModal({
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-pastel-green text-white font-semibold text-sm hover:bg-pastel-green/90 transition-colors"
+            className="w-full py-3 rounded-xl bg-pastel-green text-white font-semibold text-sm hover:bg-pastel-green/90 transition-colors mb-4"
           >
             {isEditing ? "บันทึกการแก้ไข" : "บันทึกคำศัพท์"}
           </button>

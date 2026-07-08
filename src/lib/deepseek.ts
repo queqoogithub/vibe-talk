@@ -34,6 +34,58 @@ export function getApiKey(): string {
   return localStorage.getItem("deepseek-api-key") || "";
 }
 
+// ─── Spell Check ───────────────────────────────────────────
+
+export interface SpellCheckResult {
+  isCorrect: boolean;
+  suggestions: string[];
+}
+
+export async function checkSpelling(word: string): Promise<SpellCheckResult> {
+  const client = getClient();
+
+  const completion = await client.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `You are an English spell checker. Given a word, check if it is a correctly spelled English word. Return ONLY a valid JSON object (no markdown, no extra text):
+
+- If the word is correctly spelled:
+{"isCorrect":true,"suggestions":[]}
+
+- If the word is misspelled, provide up to 3 likely correct alternatives:
+{"isCorrect":false,"suggestions":["correct1","correct2","correct3"]}
+
+Be strict about real English words. Proper nouns and brand names are acceptable.`,
+      },
+      {
+        role: "user",
+        content: word,
+      },
+    ],
+    model: "deepseek-chat",
+    stream: false,
+    temperature: 0.1,
+    max_tokens: 200,
+  });
+
+  const raw = completion.choices[0]?.message?.content || "";
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    return { isCorrect: true, suggestions: [] };
+  }
+
+  try {
+    const parsed = JSON.parse(jsonMatch[0]);
+    return {
+      isCorrect: !!parsed.isCorrect,
+      suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions : [],
+    };
+  } catch {
+    return { isCorrect: true, suggestions: [] };
+  }
+}
+
 // ─── Vocab Inference ───────────────────────────────────────
 
 export interface InferredWord {

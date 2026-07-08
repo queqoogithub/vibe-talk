@@ -11,7 +11,7 @@ export default function SettingsPage() {
           <Settings size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-pastel-text">Settings</h1>
+          <h1 className="text-lg font-bold text-gradient">Settings</h1>
           <p className="text-[10px] text-pastel-text-light">
             ตั้งค่า API และเกี่ยวกับแอป
           </p>

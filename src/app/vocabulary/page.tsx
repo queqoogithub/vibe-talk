@@ -31,7 +31,7 @@ export default function VocabularyPage() {
           <BookOpen size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-pastel-text">Vocabulary</h1>
+          <h1 className="text-lg font-bold text-gradient">Vocabulary</h1>
           <p className="text-[10px] text-pastel-text-light">
             Oxford 3000 — คำศัพท์ที่ใช้บ่อย
           </p>
@@ -57,13 +57,16 @@ export default function VocabularyPage() {
       </div>
 
       {/* Category Selector */}
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1" style={{ scrollbarWidth: "none" }}>
+      <div
+        className="flex gap-2 overflow-x-auto scrollbar-hide pb-1"
+        style={{ scrollbarWidth: "none" }}
+      >
         {categories.map((cat) => (
           <button
             key={cat.key}
             onClick={() =>
               selectCategory(
-                cat.key === "all" ? "all" : (cat.key as VocabCategory)
+                cat.key === "all" ? "all" : (cat.key as VocabCategory),
               )
             }
             className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${
@@ -99,7 +102,10 @@ export default function VocabularyPage() {
         />
       ) : (
         <div className="text-center py-12">
-          <BookOpen size={40} className="mx-auto text-pastel-text-light/20 mb-3" />
+          <BookOpen
+            size={40}
+            className="mx-auto text-pastel-text-light/20 mb-3"
+          />
           <p className="text-sm text-pastel-text-light">
             No words in this category
           </p>

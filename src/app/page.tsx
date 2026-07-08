@@ -103,7 +103,7 @@ export default function ChatPage() {
             <Sparkles size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-pastel-text">Vibe Talk</h1>
+            <h1 className="text-lg font-bold text-gradient">Vibe Talk</h1>
             <p className="text-[10px] text-pastel-text-light">
               AI English Practice
             </p>

@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-pastel-cream text-pastel-text antialiased;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Safe area for PWA on notched phones */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+@layer components {
+  /* Hide scrollbar for horizontal scroll areas */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Pulse animation for loading dots */
+  @keyframes pulse-dot {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  .typing-dot {
+    animation: pulse-dot 1.4s infinite ease-in-out both;
+  }
+  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+  .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+  /* Slide up animation */
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+}
+
+/* PWA standalone mode tweaks */
+@media (display-mode: standalone) {
+  body {
+    /* Prevent overscroll bounce in standalone mode */
+    overscroll-behavior: none;
+  }
+}

@@ -1,0 +1,39 @@
+import { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "Vibe Talk - English Practice",
+    short_name: "Vibe Talk",
+    description:
+      "ฝึกสนทนาภาษาอังกฤษกับ AI Agent แบบมี context หลากหลายสถานการณ์",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#FFF5F0",
+    theme_color: "#FFB5C2",
+    orientation: "portrait-primary",
+    icons: [
+      {
+        src: "/icons/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        src: "/icons/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+      {
+        src: "/icons/icon-192-maskable.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      {
+        src: "/icons/icon-512-maskable.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
+    ],
+  };
+}

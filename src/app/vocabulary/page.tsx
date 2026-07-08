@@ -1,14 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { VOCAB_CATEGORY_LABELS } from "@/lib/types";
-import type { VocabCategory } from "@/lib/types";
+import type { UserVocabWord, VocabCategory } from "@/lib/types";
 import VocabularyCardComponent from "@/components/VocabularyCard";
-import { BookOpen, Layers } from "lucide-react";
+import AddWordModal from "@/components/AddWordModal";
+import {
+  BookOpen,
+  Layers,
+  ListFilter,
+  CheckCircle2,
+  Circle,
+  Plus,
+} from "lucide-react";
 
 export default function VocabularyPage() {
   const {
     selectedCategory,
+    masteryFilter,
     currentWord,
     words,
     categories,
@@ -16,12 +26,40 @@ export default function VocabularyPage() {
     masteredCount,
     totalCount,
     selectCategory,
+    selectMasteryFilter,
     nextWord,
     prevWord,
     toggleMeaning,
     markMastered,
+    unmarkMastered,
     isMastered,
+    addWord,
+    editWord,
+    removeWord,
   } = useVocabulary();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingWord, setEditingWord] = useState<UserVocabWord | null>(null);
+
+  const handleOpenAdd = () => {
+    setEditingWord(null);
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (word: UserVocabWord) => {
+    setEditingWord(word);
+    setModalOpen(true);
+  };
+
+  const handleSave = (
+    word: Omit<UserVocabWord, "id" | "createdAt"> | UserVocabWord,
+  ) => {
+    if ("id" in word) {
+      editWord(word);
+    } else {
+      addWord(word);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -30,12 +68,19 @@ export default function VocabularyPage() {
         <div className="w-9 h-9 rounded-xl bg-pastel-green flex items-center justify-center">
           <BookOpen size={20} className="text-white" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-lg font-bold text-gradient">Vocabulary</h1>
           <p className="text-[10px] text-pastel-text-light">
-            Oxford 3000 — คำศัพท์ที่ใช้บ่อย
+            บันทึกคำศัพท์และตัวอย่างประโยคของคุณเอง
           </p>
         </div>
+        <button
+          onClick={handleOpenAdd}
+          className="w-9 h-9 rounded-xl bg-pastel-pink flex items-center justify-center text-white shadow-sm hover:bg-pastel-pink-dark transition-colors"
+          title="เพิ่มคำศัพท์ใหม่"
+        >
+          <Plus size={20} />
+        </button>
       </div>
 
       {/* Progress */}
@@ -54,6 +99,30 @@ export default function VocabularyPage() {
             }}
           />
         </div>
+      </div>
+
+      {/* Mastery Filter */}
+      <div className="flex gap-2">
+        {(
+          [
+            { key: "all" as const, label: "ทั้งหมด", icon: ListFilter },
+            { key: "unmastered" as const, label: "ยังไม่รู้", icon: Circle },
+            { key: "mastered" as const, label: "รู้แล้ว", icon: CheckCircle2 },
+          ] as const
+        ).map(({ key, label, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => selectMasteryFilter(key)}
+            className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+              masteryFilter === key
+                ? "bg-pastel-pink text-white shadow-sm"
+                : "bg-white border border-pastel-border text-pastel-text-light hover:bg-pastel-pink-light/20"
+            }`}
+          >
+            <Icon size={14} />
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Category Selector */}
@@ -87,7 +156,7 @@ export default function VocabularyPage() {
         ))}
       </div>
 
-      {/* Word Card */}
+      {/* Word Card or Empty State */}
       {currentWord ? (
         <VocabularyCardComponent
           word={currentWord}
@@ -99,6 +168,9 @@ export default function VocabularyPage() {
           onNext={nextWord}
           onToggleMeaning={toggleMeaning}
           onMarkMastered={markMastered}
+          onUnmarkMastered={unmarkMastered}
+          onEdit={handleOpenEdit}
+          onDelete={removeWord}
         />
       ) : (
         <div className="text-center py-12">
@@ -106,11 +178,29 @@ export default function VocabularyPage() {
             size={40}
             className="mx-auto text-pastel-text-light/20 mb-3"
           />
-          <p className="text-sm text-pastel-text-light">
-            No words in this category
+          <p className="text-sm text-pastel-text-light mb-1">
+            ยังไม่มีคำศัพท์ในหมวดนี้
           </p>
+          <p className="text-xs text-pastel-text-light/50 mb-4">
+            เพิ่มคำศัพท์แรกของคุณเพื่อเริ่มต้น
+          </p>
+          <button
+            onClick={handleOpenAdd}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-pastel-pink text-white text-sm font-medium shadow-sm hover:bg-pastel-pink-dark transition-colors"
+          >
+            <Plus size={16} />
+            เพิ่มคำศัพท์
+          </button>
         </div>
       )}
+
+      {/* Add/Edit Modal */}
+      <AddWordModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSave}
+        editWord={editingWord}
+      />
     </div>
   );
 }

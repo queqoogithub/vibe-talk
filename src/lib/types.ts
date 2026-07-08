@@ -150,6 +150,11 @@ export interface VocabWord {
   category: VocabCategory;
 }
 
+export interface UserVocabWord extends VocabWord {
+  id: string;
+  createdAt: number;
+}
+
 export type VocabCategory =
   | "daily-life"
   | "food-drink"
@@ -162,7 +167,8 @@ export type VocabCategory =
   | "nature"
   | "shopping"
   | "people"
-  | "time";
+  | "time"
+  | "general";
 
 export const VOCAB_CATEGORY_LABELS: Record<VocabCategory, string> = {
   "daily-life": "ชีวิตประจำวัน",
@@ -177,4 +183,5 @@ export const VOCAB_CATEGORY_LABELS: Record<VocabCategory, string> = {
   shopping: "ช้อปปิ้ง",
   people: "ผู้คน & ความสัมพันธ์",
   time: "เวลา",
+  general: "ทั่วไป",
 };

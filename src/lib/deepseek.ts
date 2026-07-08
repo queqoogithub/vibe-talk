@@ -1,5 +1,10 @@
 import OpenAI from "openai";
-import type { Scenario, ChatMessage, GrammarCorrection, ErrorType } from "./types";
+import type {
+  Scenario,
+  ChatMessage,
+  GrammarCorrection,
+  ErrorType,
+} from "./types";
 import { SCENARIO_SYSTEM_PROMPTS } from "./types";
 
 function getClient(): OpenAI {
@@ -29,9 +34,70 @@ export function getApiKey(): string {
   return localStorage.getItem("deepseek-api-key") || "";
 }
 
+// ─── Vocab Inference ───────────────────────────────────────
+
+export interface InferredWord {
+  phonetic: string;
+  thaiMeaning: string;
+  partOfSpeech: string;
+  category: string;
+  examples: string[];
+}
+
+export async function inferWordInfo(word: string): Promise<InferredWord> {
+  const client = getClient();
+
+  const completion = await client.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `You are an English vocabulary assistant. Given an English word, return structured information in JSON format.
+
+Return ONLY a valid JSON object (no markdown, no extra text) with these fields:
+- phonetic: IPA pronunciation (e.g. "/ˈhæpi/")
+- thaiMeaning: meaning in Thai language
+- partOfSpeech: part of speech abbreviation (e.g. "n.", "v.", "adj.", "adv.", "prep.", "conj.")
+- category: one of ["daily-life", "food-drink", "travel", "work-business", "health", "education", "technology", "emotions", "nature", "shopping", "people", "time", "general"]
+- examples: array of 2-3 example sentences using the word
+
+Example output:
+{"phonetic":"/ˈhæpi/","thaiMeaning":"มีความสุข","partOfSpeech":"adj.","category":"emotions","examples":["She looks very happy today.","I'm happy to help you."]}`,
+      },
+      {
+        role: "user",
+        content: `Word: ${word}`,
+      },
+    ],
+    model: "deepseek-chat",
+    stream: false,
+    temperature: 0.3,
+  });
+
+  const raw = completion.choices[0]?.message?.content || "";
+
+  // Try to extract JSON from response (handle markdown code blocks)
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("Could not parse AI response");
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]);
+
+  return {
+    phonetic: parsed.phonetic || "/—/",
+    thaiMeaning: parsed.thaiMeaning || "",
+    partOfSpeech: parsed.partOfSpeech || "—",
+    category: parsed.category || "general",
+    examples: Array.isArray(parsed.examples) ? parsed.examples : [],
+  };
+}
+
 // ─── System Prompt Builder ─────────────────────────────────
 
-function buildSystemPrompt(scenario: Scenario, handoffContext?: string): string {
+function buildSystemPrompt(
+  scenario: Scenario,
+  handoffContext?: string,
+): string {
   const baseGrammarInstructions = `
 IMPORTANT GRAMMAR CORRECTION RULES:
 After EVERY user message, you MUST analyze their grammar. If there are any mistakes (tense, preposition, article, word order, word choice, S-V agreement, plural, spelling), you must:
@@ -100,7 +166,7 @@ export interface ChatResponse {
 export async function sendMessage(
   scenario: Scenario,
   messages: ChatMessage[],
-  handoffContext?: string
+  handoffContext?: string,
 ): Promise<ChatResponse> {
   const client = getClient();
 
@@ -138,7 +204,7 @@ export async function sendMessage(
 
 export async function generateAIHandoffSummary(
   scenario: Scenario,
-  messages: ChatMessage[]
+  messages: ChatMessage[],
 ): Promise<string> {
   const client = getClient();
 

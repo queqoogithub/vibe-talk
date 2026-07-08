@@ -4,10 +4,11 @@ import type {
   ErrorDashboard,
   ErrorStat,
   ErrorType,
+  UserVocabWord,
 } from "./types";
 
 const DB_NAME = "vibe-talk-db";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
@@ -27,6 +28,9 @@ function getDB(): Promise<IDBPDatabase> {
         if (!db.objectStoreNames.contains("vocabProgress")) {
           db.createObjectStore("vocabProgress", { keyPath: "word" });
         }
+        if (!db.objectStoreNames.contains("userVocab")) {
+          db.createObjectStore("userVocab", { keyPath: "id" });
+        }
       },
     });
   }
@@ -36,14 +40,14 @@ function getDB(): Promise<IDBPDatabase> {
 // ─── Conversations ─────────────────────────────────────────
 
 export async function saveConversation(
-  session: ConversationSession
+  session: ConversationSession,
 ): Promise<void> {
   const db = await getDB();
   await db.put("conversations", { ...session, updatedAt: Date.now() });
 }
 
 export async function getConversation(
-  id: string
+  id: string,
 ): Promise<ConversationSession | undefined> {
   const db = await getDB();
   return db.get("conversations", id);
@@ -80,7 +84,7 @@ export async function getErrorDashboard(): Promise<ErrorDashboard> {
 
 export async function trackError(
   errorType: ErrorType,
-  example: string
+  example: string,
 ): Promise<void> {
   const db = await getDB();
   const dashboard = await getErrorDashboard();
@@ -89,7 +93,7 @@ export async function trackError(
   dashboard.lastUpdated = Date.now();
 
   const existing = dashboard.errorBreakdown.find(
-    (e) => e.errorType === errorType
+    (e) => e.errorType === errorType,
   );
   if (existing) {
     existing.count++;
@@ -134,9 +138,7 @@ export async function resetErrorDashboard(): Promise<void> {
  * This stores the last few messages + key context so the AI
  * can resume with full awareness of the conversation history.
  */
-export function generateHandoffSummary(
-  session: ConversationSession
-): string {
+export function generateHandoffSummary(session: ConversationSession): string {
   const recentMessages = session.messages.slice(-6);
   const summary = recentMessages
     .map((m) => `[${m.role}]: ${m.content}`)
@@ -154,7 +156,7 @@ export interface VocabProgress {
 }
 
 export async function getVocabProgress(
-  word: string
+  word: string,
 ): Promise<VocabProgress | undefined> {
   const db = await getDB();
   return db.get("vocabProgress", word);
@@ -171,7 +173,55 @@ export async function markWordMastered(word: string): Promise<void> {
   });
 }
 
+export async function markWordUnmastered(word: string): Promise<void> {
+  const db = await getDB();
+  await db.put("vocabProgress", {
+    word,
+    mastered: false,
+    lastReviewed: Date.now(),
+    reviewCount: 0,
+  });
+}
+
 export async function getAllVocabProgress(): Promise<VocabProgress[]> {
   const db = await getDB();
   return db.getAll("vocabProgress");
+}
+
+// ─── User Vocab ─────────────────────────────────────────────
+
+export async function addUserWord(
+  word: Omit<UserVocabWord, "id" | "createdAt">,
+): Promise<UserVocabWord> {
+  const db = await getDB();
+  const newWord: UserVocabWord = {
+    ...word,
+    id: crypto.randomUUID(),
+    createdAt: Date.now(),
+  };
+  await db.put("userVocab", newWord);
+  return newWord;
+}
+
+export async function updateUserWord(word: UserVocabWord): Promise<void> {
+  const db = await getDB();
+  await db.put("userVocab", word);
+}
+
+export async function deleteUserWord(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete("userVocab", id);
+}
+
+export async function getAllUserWords(): Promise<UserVocabWord[]> {
+  const db = await getDB();
+  const all = await db.getAll("userVocab");
+  return all.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function getUserWord(
+  id: string,
+): Promise<UserVocabWord | undefined> {
+  const db = await getDB();
+  return db.get("userVocab", id);
 }

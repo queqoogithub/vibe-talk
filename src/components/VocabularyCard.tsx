@@ -1,6 +1,6 @@
 "use client";
 
-import type { VocabWord } from "@/lib/types";
+import type { UserVocabWord } from "@/lib/types";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,11 +9,14 @@ import {
   EyeOff,
   BookOpen,
   Volume2,
+  Circle,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useState, useCallback } from "react";
 
 interface Props {
-  word: VocabWord;
+  word: UserVocabWord;
   currentIndex: number;
   totalCount: number;
   showMeaning: boolean;
@@ -22,6 +25,9 @@ interface Props {
   onNext: () => void;
   onToggleMeaning: () => void;
   onMarkMastered: (word: string) => void;
+  onUnmarkMastered: (word: string) => void;
+  onEdit: (word: UserVocabWord) => void;
+  onDelete: (id: string) => void;
 }
 
 export default function VocabularyCard({
@@ -34,8 +40,12 @@ export default function VocabularyCard({
   onNext,
   onToggleMeaning,
   onMarkMastered,
+  onUnmarkMastered,
+  onEdit,
+  onDelete,
 }: Props) {
   const [speaking, setSpeaking] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleSpeak = useCallback(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -48,6 +58,16 @@ export default function VocabularyCard({
     utterance.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(utterance);
   }, [word.word]);
+
+  const handleDelete = () => {
+    if (showDeleteConfirm) {
+      onDelete(word.id);
+      setShowDeleteConfirm(false);
+    } else {
+      setShowDeleteConfirm(true);
+      setTimeout(() => setShowDeleteConfirm(false), 3000);
+    }
+  };
 
   return (
     <div className="bg-white rounded-3xl border border-pastel-border shadow-sm overflow-hidden">
@@ -67,7 +87,30 @@ export default function VocabularyCard({
           <span className="text-xs text-pastel-text-light font-mono">
             {currentIndex + 1} / {totalCount}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {/* Edit */}
+            <button
+              onClick={() => onEdit(word)}
+              className="p-2 rounded-xl hover:bg-pastel-cream transition-colors text-pastel-text-light/50 hover:text-pastel-blue-dark"
+              title="แก้ไข"
+            >
+              <Pencil size={16} />
+            </button>
+
+            {/* Delete */}
+            <button
+              onClick={handleDelete}
+              className={`p-2 rounded-xl transition-colors ${
+                showDeleteConfirm
+                  ? "bg-red-50 text-red-500"
+                  : "text-pastel-text-light/50 hover:bg-red-50 hover:text-red-400"
+              }`}
+              title={showDeleteConfirm ? "กดอีกครั้งเพื่อลบ" : "ลบ"}
+            >
+              <Trash2 size={16} />
+            </button>
+
+            {/* Meaning toggle */}
             <button
               onClick={onToggleMeaning}
               className="p-2 rounded-xl hover:bg-pastel-cream transition-colors text-pastel-text-light"
@@ -75,20 +118,24 @@ export default function VocabularyCard({
             >
               {showMeaning ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            {!isMastered && (
+
+            {/* Mastered toggle */}
+            {isMastered ? (
               <button
-                onClick={() => onMarkMastered(word.word)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-green-light text-green-700 text-xs font-medium hover:bg-pastel-green transition-colors"
+                onClick={() => onUnmarkMastered(word.word)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-green/80 text-white text-xs font-medium hover:bg-pastel-green transition-colors"
               >
                 <CheckCircle2 size={14} />
-                Mastered
+                รู้แล้ว
               </button>
-            )}
-            {isMastered && (
-              <span className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-green/20 text-green-600 text-xs font-medium">
-                <CheckCircle2 size={14} />
-                Mastered ✓
-              </span>
+            ) : (
+              <button
+                onClick={() => onMarkMastered(word.word)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-pink-light text-pastel-pink-dark text-xs font-medium hover:bg-pastel-pink hover:text-white transition-colors"
+              >
+                <Circle size={14} />
+                ยังไม่รู้
+              </button>
             )}
           </div>
         </div>
@@ -132,20 +179,22 @@ export default function VocabularyCard({
           </div>
 
           {/* Examples */}
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-pastel-text-light flex items-center gap-1">
-              <BookOpen size={13} />
-              Example Sentences
-            </p>
-            {word.examples.map((ex, idx) => (
-              <div
-                key={idx}
-                className="bg-pastel-blue-light/30 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
-              >
-                {ex}
-              </div>
-            ))}
-          </div>
+          {word.examples.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-pastel-text-light flex items-center gap-1">
+                <BookOpen size={13} />
+                Example Sentences
+              </p>
+              {word.examples.map((ex, idx) => (
+                <div
+                  key={idx}
+                  className="bg-pastel-blue-light/30 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
+                >
+                  {ex}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Tap hint */}

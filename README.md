@@ -1,4 +1,4 @@
-# <img src="public/icons/vt_msg_logo.png" width="32" /> Vibe Talk
+<img src="public/icons/myvt-icon.png" width="32" />
 
 แอปฝึกสนทนาภาษาอังกฤษกับ AI Agent ในสถานการณ์จำลอง พร้อมตรวจแกรมม่า จัดการคลังคำศัพท์ และติดตามพัฒนาการ
 

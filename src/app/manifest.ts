@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "ฝึกสนทนาภาษาอังกฤษกับ AI Agent แบบมี context หลากหลายสถานการณ์",
     start_url: "/",
     display: "standalone",
-    background_color: "#FBF5EE",
+    background_color: "#F3EBE1",
     theme_color: "#D4A574",
     orientation: "portrait-primary",
     icons: [

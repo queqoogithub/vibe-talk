@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import BottomNav from "./BottomNav";
+import PwaInstallModal from "./PwaInstallModal";
+import OpenInBrowserBanner from "./OpenInBrowserBanner";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
 
 export default function PhoneFrame({
   children,
@@ -9,6 +12,7 @@ export default function PhoneFrame({
   children: React.ReactNode;
 }) {
   const [isStandalone, setIsStandalone] = useState(false);
+  const { showModal, install, dismiss } = usePwaInstall();
 
   useEffect(() => {
     const mq = window.matchMedia("(display-mode: standalone)");
@@ -32,6 +36,12 @@ export default function PhoneFrame({
 
   return (
     <>
+      {/* PWA Install Modal */}
+      {showModal && <PwaInstallModal onInstall={install} onDismiss={dismiss} />}
+
+      {/* In-App Browser Banner */}
+      <OpenInBrowserBanner />
+
       {/* ── Desktop: centered with gradient border ── */}
       <div
         className="hidden md:flex min-h-screen items-center justify-center p-4"

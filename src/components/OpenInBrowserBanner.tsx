@@ -54,7 +54,7 @@ export default function OpenInBrowserBanner() {
               </p>
               <p className="text-[11px] text-pastel-text-light leading-relaxed">
                 {browserName
-                  ? `คุณกำลังใช้เบราว์เซอร์ใน${browserName} ซึ่งไม่รองรับการติดตั้งแอป`
+                  ? `คุณกำลังใช้เบราว์เซอร์ใน ${browserName} ซึ่งไม่รองรับการติดตั้งแอป`
                   : "เบราว์เซอร์นี้ไม่รองรับการติดตั้ง PWA"}
               </p>
 

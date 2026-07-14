@@ -49,12 +49,12 @@ export default function ConversationList({
             key={session.id}
             className={`group relative flex items-center gap-3 p-3 rounded-2xl transition-all duration-200 cursor-pointer ${
               isActive
-                ? "bg-pastel-blue-light/60 border border-pastel-blue/30"
-                : "bg-white border border-pastel-border hover:bg-pastel-cream/50"
+                ? "bg-gradient-to-r from-pastel-blue-light/80 to-pastel-purple-light/60 border border-pastel-blue/30 shadow-sm"
+                : "bg-gradient-card border border-pastel-border hover:bg-pastel-purple-light/20"
             }`}
             onClick={() => onSelect(session)}
           >
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-pastel-pink-light flex items-center justify-center">
+            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-primary/20 flex items-center justify-center">
               <MessageSquare size={18} className="text-pastel-pink-dark" />
             </div>
 

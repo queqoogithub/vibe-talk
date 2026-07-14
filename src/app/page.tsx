@@ -99,7 +99,7 @@ export default function ChatPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-pastel-pink flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md">
             <Sparkles size={20} className="text-white" />
           </div>
           <div>
@@ -120,7 +120,7 @@ export default function ChatPage() {
             onClick={() => setShowHistory(!showHistory)}
             className={`p-2.5 rounded-xl transition-all ${
               showHistory
-                ? "bg-pastel-blue text-white"
+                ? "bg-gradient-periwinkle text-white shadow-md"
                 : "bg-white border border-pastel-border text-pastel-text-light hover:bg-pastel-cream"
             }`}
           >
@@ -130,7 +130,7 @@ export default function ChatPage() {
       </div>
 
       {mounted && !hasKey && (
-        <div className="mb-3 p-3 rounded-2xl bg-pastel-yellow-light border border-pastel-yellow/40 text-xs text-pastel-text-light text-center flex items-center justify-center gap-1.5">
+        <div className="mb-3 p-3 rounded-2xl bg-pastel-yellow-light/70 border border-pastel-yellow/40 text-xs text-pastel-text-light text-center flex items-center justify-center gap-1.5">
           <AlertTriangle size={14} className="text-pastel-yellow" />
           Please set your DeepSeek API key in{" "}
           <a
@@ -177,7 +177,7 @@ export default function ChatPage() {
           >
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                <div className="w-16 h-16 rounded-2xl bg-pastel-pink-light flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-primary/20 flex items-center justify-center mb-4">
                   <MessageCircle size={32} className="text-pastel-pink-dark" />
                 </div>
                 <h2 className="text-base font-semibold text-pastel-text mb-1">
@@ -202,9 +202,9 @@ export default function ChatPage() {
             {isLoading && (
               <div className="flex items-center gap-2 px-3">
                 <div className="flex gap-1">
-                  <span className="typing-dot w-2 h-2 rounded-full bg-pastel-blue-dark"></span>
-                  <span className="typing-dot w-2 h-2 rounded-full bg-pastel-blue-dark"></span>
-                  <span className="typing-dot w-2 h-2 rounded-full bg-pastel-blue-dark"></span>
+                  <span className="typing-dot w-2 h-2 rounded-full bg-gradient-to-br from-pastel-purple to-pastel-pink"></span>
+                  <span className="typing-dot w-2 h-2 rounded-full bg-gradient-to-br from-pastel-purple to-pastel-pink"></span>
+                  <span className="typing-dot w-2 h-2 rounded-full bg-gradient-to-br from-pastel-purple to-pastel-pink"></span>
                 </div>
                 <span className="text-xs text-pastel-text-light">
                   AI is typing...
@@ -219,7 +219,7 @@ export default function ChatPage() {
           {showScrollButton && (
             <button
               onClick={scrollToBottom}
-              className="absolute bottom-4 right-4 p-2 rounded-full bg-white shadow-lg border border-pastel-border text-pastel-text-light hover:text-pastel-text transition-all z-10"
+              className="absolute bottom-4 right-4 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-lg border border-pastel-border text-pastel-text-light hover:text-pastel-text transition-all z-10"
             >
               <ArrowDown size={18} />
             </button>

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#D4A574",
+  themeColor: "#B388FF",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -38,7 +38,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className="min-h-screen safe-area-bottom safe-area-top bg-pastel-cream">
+      <body
+        className="min-h-screen safe-area-bottom safe-area-top"
+        style={{
+          background:
+            "linear-gradient(170deg, #F5F0FF 0%, #EDE4FF 40%, #F0EAFA 100%)",
+        }}
+      >
         <PhoneFrame>{children}</PhoneFrame>
       </body>
     </html>

@@ -70,11 +70,11 @@ export default function VocabularyCard({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-pastel-border shadow-sm overflow-hidden">
+    <div className="bg-gradient-card rounded-3xl border border-pastel-border shadow-sm overflow-hidden">
       {/* Progress bar */}
       <div className="h-1 bg-pastel-cream">
         <div
-          className="h-full bg-pastel-pink transition-all duration-300"
+          className="h-full bg-gradient-to-r from-pastel-purple to-pastel-pink transition-all duration-300"
           style={{
             width: `${((currentIndex + 1) / totalCount) * 100}%`,
           }}
@@ -123,7 +123,7 @@ export default function VocabularyCard({
             {isMastered ? (
               <button
                 onClick={() => onUnmarkMastered(word.word)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-green/80 text-white text-xs font-medium hover:bg-pastel-green transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-success/80 text-white text-xs font-medium hover:bg-gradient-success transition-colors"
               >
                 <CheckCircle2 size={14} />
                 รู้แล้ว
@@ -131,7 +131,7 @@ export default function VocabularyCard({
             ) : (
               <button
                 onClick={() => onMarkMastered(word.word)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-pink-light text-pastel-pink-dark text-xs font-medium hover:bg-pastel-pink hover:text-white transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-primary/15 text-pastel-pink-dark text-xs font-medium hover:bg-gradient-primary hover:text-white transition-colors"
               >
                 <Circle size={14} />
                 ยังไม่รู้
@@ -151,8 +151,8 @@ export default function VocabularyCard({
               disabled={speaking}
               className={`p-2 rounded-xl transition-all ${
                 speaking
-                  ? "bg-pastel-pink-light text-pastel-pink-dark animate-pulse"
-                  : "bg-pastel-blue-light/50 text-pastel-blue-dark hover:bg-pastel-blue-light hover:scale-110"
+                  ? "bg-gradient-primary/30 text-pastel-pink-dark animate-pulse"
+                  : "bg-gradient-periwinkle/25 text-pastel-blue-dark hover:bg-gradient-periwinkle/50 hover:scale-110"
               }`}
               title="ฟังเสียงคำศัพท์"
             >
@@ -171,7 +171,7 @@ export default function VocabularyCard({
             showMeaning ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="bg-pastel-cream/60 rounded-2xl p-4 mb-4">
+          <div className="bg-pastel-purple-light/50 rounded-2xl p-4 mb-4">
             <p className="text-sm text-pastel-text-light mb-1">ความหมาย:</p>
             <p className="text-lg font-medium text-pastel-text">
               {word.thaiMeaning}
@@ -188,7 +188,7 @@ export default function VocabularyCard({
               {word.examples.map((ex, idx) => (
                 <div
                   key={idx}
-                  className="bg-pastel-blue-light/30 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
+                  className="bg-gradient-periwinkle/15 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
                 >
                   {ex}
                 </div>

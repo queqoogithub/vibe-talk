@@ -37,7 +37,7 @@ export default function ChatInput({ onSend, isLoading, disabled }: Props) {
   };
 
   return (
-    <div className="flex items-end gap-2 bg-white/80 backdrop-blur-sm border border-pastel-border rounded-2xl p-2 shadow-sm">
+    <div className="flex items-end gap-2 bg-white/70 backdrop-blur-sm border border-pastel-border rounded-2xl p-2 shadow-sm">
       <textarea
         ref={textareaRef}
         value={input}
@@ -51,7 +51,7 @@ export default function ChatInput({ onSend, isLoading, disabled }: Props) {
       <button
         onClick={handleSend}
         disabled={!input.trim() || isLoading || disabled}
-        className="flex-shrink-0 w-10 h-10 rounded-xl bg-pastel-pink text-white flex items-center justify-center transition-all duration-200 hover:bg-pastel-pink-dark disabled:opacity-40 disabled:cursor-not-allowed"
+        className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center transition-all duration-200 hover:bg-gradient-primary-dark hover:scale-105 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
         {isLoading ? (
           <Loader2 size={18} className="animate-spin" />

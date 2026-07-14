@@ -15,7 +15,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky bottom-0 z-50 bg-white/80 backdrop-blur-lg safe-area-bottom flex-shrink-0 rounded-b-3xl">
+    <nav className="sticky bottom-0 z-50 safe-area-bottom flex-shrink-0 rounded-b-3xl bg-gradient-nav backdrop-blur-lg">
       <div className="max-w-lg mx-auto flex justify-around items-center h-16 px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -36,7 +36,7 @@ export default function BottomNav() {
               />
               <span className="text-[11px] font-medium">{item.label}</span>
               {isActive && (
-                <div className="absolute -bottom-0.5 w-6 h-0.5 rounded-full bg-pastel-pink" />
+                <div className="absolute -bottom-0.5 w-6 h-0.5 rounded-full bg-gradient-to-r from-pastel-purple to-pastel-pink" />
               )}
             </Link>
           );

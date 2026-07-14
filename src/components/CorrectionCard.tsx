@@ -10,7 +10,7 @@ interface Props {
 
 export default function CorrectionCard({ correction }: Props) {
   return (
-    <div className="bg-pastel-yellow-light/60 border border-pastel-yellow/30 rounded-xl p-3 text-xs">
+    <div className="bg-pastel-yellow-light/70 border border-pastel-yellow/30 rounded-xl p-3 text-xs backdrop-blur-sm">
       <div className="flex items-center gap-1.5 mb-2">
         <AlertCircle size={13} className="text-pastel-pink-dark" />
         <span className="font-semibold text-pastel-pink-dark">

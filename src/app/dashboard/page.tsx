@@ -10,7 +10,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-9 h-9 rounded-xl bg-pastel-purple flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-gradient-mauve flex items-center justify-center shadow-md">
           <BarChart3 size={20} className="text-white" />
         </div>
         <div>

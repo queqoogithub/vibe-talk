@@ -15,15 +15,16 @@ import {
 } from "lucide-react";
 
 const BAR_COLORS: Record<ErrorType, string> = {
-  tense: "bg-pastel-pink",
-  preposition: "bg-pastel-purple",
-  article: "bg-pastel-blue",
-  "word-order": "bg-pastel-green",
-  "word-choice": "bg-pastel-yellow",
-  "subject-verb-agreement": "bg-pastel-pink-dark",
-  plural: "bg-pastel-purple-dark",
-  spelling: "bg-pastel-blue-dark",
-  other: "bg-pastel-text-light",
+  tense: "bg-gradient-to-r from-pastel-pink to-pastel-pink-dark",
+  preposition: "bg-gradient-to-r from-pastel-purple to-pastel-purple-dark",
+  article: "bg-gradient-to-r from-pastel-blue to-pastel-blue-dark",
+  "word-order": "bg-gradient-to-r from-pastel-green to-pastel-blue",
+  "word-choice": "bg-gradient-to-r from-pastel-yellow to-pastel-pink",
+  "subject-verb-agreement":
+    "bg-gradient-to-r from-pastel-pink-dark to-pastel-purple-dark",
+  plural: "bg-gradient-to-r from-pastel-purple to-pastel-pink",
+  spelling: "bg-gradient-to-r from-pastel-blue to-pastel-purple",
+  other: "bg-gradient-to-r from-pastel-text-light to-pastel-text",
 };
 
 interface Props {
@@ -39,9 +40,9 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
     <div className="space-y-5">
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white rounded-2xl border border-pastel-border p-4 shadow-sm">
+        <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pastel-pink-light flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-primary/20 flex items-center justify-center">
               <AlertTriangle size={16} className="text-pastel-pink-dark" />
             </div>
             <span className="text-xs text-pastel-text-light">Total Errors</span>
@@ -49,9 +50,9 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
           <p className="text-2xl font-bold text-pastel-text">{totalErrors}</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-pastel-border p-4 shadow-sm">
+        <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pastel-blue-light flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-periwinkle/20 flex items-center justify-center">
               <MessageSquare size={16} className="text-pastel-blue-dark" />
             </div>
             <span className="text-xs text-pastel-text-light">
@@ -65,7 +66,7 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
       </div>
 
       {/* Error Breakdown */}
-      <div className="bg-white rounded-2xl border border-pastel-border p-4 shadow-sm">
+      <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <BarChart3 size={18} className="text-pastel-purple" />
@@ -131,7 +132,7 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
 
       {/* Insight */}
       {errorBreakdown.length > 0 && (
-        <div className="bg-pastel-yellow-light/50 border border-pastel-yellow/30 rounded-2xl p-4">
+        <div className="bg-pastel-yellow-light/60 border border-pastel-yellow/30 rounded-2xl p-4">
           <p className="text-xs text-pastel-text-light leading-relaxed flex items-start gap-1.5">
             <Lightbulb
               size={14}

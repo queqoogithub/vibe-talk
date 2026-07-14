@@ -16,7 +16,9 @@ export default function ChatBubble({ message }: Props) {
       {/* Avatar */}
       <div
         className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center ${
-          isUser ? "bg-pastel-purple text-white" : "bg-pastel-blue text-white"
+          isUser
+            ? "bg-gradient-mauve text-white"
+            : "bg-gradient-periwinkle text-white"
         }`}
       >
         {isUser ? <User size={18} /> : <Bot size={18} />}
@@ -29,8 +31,8 @@ export default function ChatBubble({ message }: Props) {
         <div
           className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
             isUser
-              ? "bg-pastel-purple text-white rounded-br-md"
-              : "bg-white border border-pastel-border text-pastel-text rounded-bl-md shadow-sm"
+              ? "bg-gradient-mauve text-white rounded-br-md shadow-md"
+              : "bg-gradient-card border border-pastel-border text-pastel-text rounded-bl-md shadow-sm"
           }`}
         >
           <p className="whitespace-pre-wrap break-words">{message.content}</p>

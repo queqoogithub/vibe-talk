@@ -256,8 +256,8 @@ export default function AddWordModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full sm:max-w-md max-h-[90vh] bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-y-auto animate-slide-up pb-20 safe-area-bottom">
-        <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-4 border-b border-pastel-border">
+      <div className="relative w-full sm:max-w-md max-h-[90vh] bg-gradient-card rounded-t-3xl sm:rounded-3xl shadow-xl overflow-y-auto animate-slide-up pb-20 safe-area-bottom">
+        <div className="sticky top-0 bg-gradient-card z-10 flex items-center justify-between p-4 border-b border-pastel-border">
           <h2 className="text-lg font-bold text-pastel-text">
             {isEditing ? "แก้ไขคำศัพท์" : "เพิ่มคำศัพท์ใหม่"}
           </h2>
@@ -363,7 +363,7 @@ export default function AddWordModal({
             type="button"
             onClick={handleAutoFill}
             disabled={inferring || !word.trim()}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-pastel-purple-light text-pastel-purple-dark text-sm font-medium hover:bg-pastel-purple-light/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-pastel-purple-light text-pastel-purple-dark text-sm font-medium hover:bg-pastel-purple-light/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {inferring ? (
               <>
@@ -487,7 +487,7 @@ export default function AddWordModal({
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-pastel-green text-white font-semibold text-sm hover:bg-pastel-green/90 transition-colors mb-4"
+            className="w-full py-3 rounded-xl bg-gradient-success text-white font-semibold text-sm hover:opacity-90 transition-opacity mb-4"
           >
             {isEditing ? "บันทึกการแก้ไข" : "บันทึกคำศัพท์"}
           </button>

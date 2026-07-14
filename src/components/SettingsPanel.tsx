@@ -33,9 +33,9 @@ export default function SettingsPanel() {
   return (
     <div className="space-y-5">
       {/* API Key Section */}
-      <div className="bg-white rounded-2xl border border-pastel-border p-5 shadow-sm">
+      <div className="bg-gradient-card rounded-2xl border border-pastel-border p-5 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-9 h-9 rounded-xl bg-pastel-pink-light flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl bg-gradient-primary/20 flex items-center justify-center">
             <Key size={18} className="text-pastel-pink-dark" />
           </div>
           <div>
@@ -70,8 +70,8 @@ export default function SettingsPanel() {
             disabled={!key.trim()}
             className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
               saved
-                ? "bg-pastel-green text-white"
-                : "bg-pastel-pink text-white hover:bg-pastel-pink-dark disabled:opacity-40"
+                ? "bg-gradient-success text-white"
+                : "bg-gradient-primary text-white hover:bg-gradient-primary-dark disabled:opacity-40"
             }`}
           >
             {saved ? (
@@ -94,13 +94,13 @@ export default function SettingsPanel() {
       </div>
 
       {/* How to get API Key */}
-      <div className="bg-white rounded-2xl border border-pastel-border p-5 shadow-sm">
+      <div className="bg-gradient-card rounded-2xl border border-pastel-border p-5 shadow-sm">
         <h3 className="text-sm font-semibold text-pastel-text mb-3">
           วิธีขอ API Key
         </h3>
         <ol className="space-y-2.5 text-xs text-pastel-text-light leading-relaxed">
           <li className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-pastel-pink-light text-pastel-pink-dark flex items-center justify-center text-[10px] font-bold">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-primary/25 text-pastel-pink-dark flex items-center justify-center text-[10px] font-bold">
               1
             </span>
             ไปที่{" "}
@@ -114,13 +114,13 @@ export default function SettingsPanel() {
             </a>
           </li>
           <li className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-pastel-blue-light text-pastel-blue-dark flex items-center justify-center text-[10px] font-bold">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-periwinkle/25 text-pastel-blue-dark flex items-center justify-center text-[10px] font-bold">
               2
             </span>
             สมัครสมาชิกหรือเข้าสู่ระบบ
           </li>
           <li className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-pastel-purple-light text-pastel-purple-dark flex items-center justify-center text-[10px] font-bold">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-mauve/25 text-pastel-purple-dark flex items-center justify-center text-[10px] font-bold">
               3
             </span>
             สร้าง API Key ใหม่ แล้วคัดลอกมาวางด้านบน
@@ -129,7 +129,7 @@ export default function SettingsPanel() {
       </div>
 
       {/* About */}
-      <div className="bg-white rounded-2xl border border-pastel-border p-5 shadow-sm">
+      <div className="bg-gradient-card rounded-2xl border border-pastel-border p-5 shadow-sm">
         <h3 className="text-sm font-semibold text-pastel-text mb-2">
           เกี่ยวกับ Vibe Talk
         </h3>

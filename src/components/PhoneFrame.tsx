@@ -33,20 +33,29 @@ export default function PhoneFrame({
   return (
     <>
       {/* ── Desktop: centered with gradient border ── */}
-      <div className="hidden md:flex min-h-screen items-center justify-center bg-pastel-cream p-4">
+      <div
+        className="hidden md:flex min-h-screen items-center justify-center p-4"
+        style={{
+          background:
+            "linear-gradient(170deg, #F5F0FF 0%, #EDE4FF 40%, #F0EAFA 100%)",
+        }}
+      >
         <div
           className="
           relative w-full max-w-[430px] h-[92dvh]
-          flex flex-col bg-pastel-surface
+          flex flex-col
           rounded-3xl overflow-hidden
-          shadow-xl shadow-pastel-purple/10
+          shadow-xl shadow-pastel-purple/20
           before:absolute before:inset-0 before:rounded-3xl before:p-[2px]
-          before:bg-white
+          before:bg-gradient-to-br before:from-pastel-purple before:via-pastel-pink before:to-pastel-blue
           before:[-webkit-mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
           before:[-webkit-mask-composite:xor]
           before:[mask-composite:exclude]
           before:pointer-events-none
         "
+          style={{
+            background: "linear-gradient(180deg, #FDFAFF 0%, #F8F4FF 100%)",
+          }}
         >
           {inner}
         </div>
@@ -54,10 +63,23 @@ export default function PhoneFrame({
 
       {/* ── Mobile / PWA standalone ── */}
       <div
-        className={`md:hidden flex flex-col min-h-screen ${isStandalone ? "bg-black" : "bg-pastel-cream"}`}
+        className={`md:hidden flex flex-col min-h-screen ${isStandalone ? "bg-black" : ""}`}
+        style={
+          isStandalone
+            ? {}
+            : {
+                background:
+                  "linear-gradient(170deg, #F5F0FF 0%, #EDE4FF 40%, #F0EAFA 100%)",
+              }
+        }
       >
         {isStandalone ? (
-          <div className="flex-1 flex flex-col mx-auto w-full max-w-[430px] bg-pastel-cream overflow-hidden relative">
+          <div
+            className="flex-1 flex flex-col mx-auto w-full max-w-[430px] overflow-hidden relative"
+            style={{
+              background: "linear-gradient(180deg, #F5F0FF 0%, #EDE4FF 100%)",
+            }}
+          >
             <div className="h-[env(safe-area-inset-top,0px)] flex-shrink-0" />
             {inner}
           </div>

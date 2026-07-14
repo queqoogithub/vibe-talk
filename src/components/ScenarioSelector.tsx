@@ -83,8 +83,8 @@ export default function ScenarioSelector({ current, onSelect }: Props) {
             onClick={() => onSelect(key)}
             className={`flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               current === key
-                ? "bg-pastel-pink text-white shadow-md shadow-pastel-pink/30"
-                : "bg-white text-pastel-text-light hover:bg-pastel-pink-light/30 border border-pastel-border"
+                ? "bg-gradient-primary text-white shadow-md shadow-pastel-pink/30 scale-105"
+                : "bg-white/80 backdrop-blur-sm text-pastel-text-light hover:bg-pastel-pink-light/30 border border-pastel-border"
             }`}
           >
             <Icon size={16} />

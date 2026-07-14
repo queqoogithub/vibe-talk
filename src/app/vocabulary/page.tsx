@@ -70,7 +70,7 @@ export default function VocabularyPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-9 h-9 rounded-xl bg-pastel-green flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-gradient-success flex items-center justify-center shadow-md">
           <BookOpen size={20} className="text-white" />
         </div>
         <div className="flex-1">
@@ -81,7 +81,7 @@ export default function VocabularyPage() {
         </div>
         <button
           onClick={handleOpenAdd}
-          className="w-9 h-9 rounded-xl bg-pastel-pink flex items-center justify-center text-white shadow-sm hover:bg-pastel-pink-dark transition-colors"
+          className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center text-white shadow-sm hover:bg-gradient-primary-dark transition-colors"
           title="เพิ่มคำศัพท์ใหม่"
         >
           <Plus size={20} />
@@ -99,7 +99,7 @@ export default function VocabularyPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="ค้นหาคำศัพท์หรือความหมาย..."
-          className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-pastel-border bg-white text-sm text-pastel-text placeholder-pastel-text-light/40 focus:outline-none focus:ring-2 focus:ring-pastel-pink-light focus:border-transparent"
+          className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-pastel-border bg-white text-sm text-pastel-text placeholder-pastel-text-light/40 focus:outline-none focus:ring-2 focus:ring-pastel-purple/30 focus:border-transparent"
         />
         {searchQuery && (
           <button
@@ -112,7 +112,7 @@ export default function VocabularyPage() {
       </div>
 
       {/* Progress */}
-      <div className="bg-white rounded-2xl border border-pastel-border p-4 shadow-sm">
+      <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-pastel-text-light">ความคืบหน้า</span>
           <span className="text-xs font-mono font-semibold text-pastel-text">
@@ -121,7 +121,7 @@ export default function VocabularyPage() {
         </div>
         <div className="h-2 bg-pastel-cream rounded-full overflow-hidden">
           <div
-            className="h-full bg-pastel-green rounded-full transition-all duration-500"
+            className="h-full bg-gradient-to-r from-pastel-blue to-pastel-green rounded-full transition-all duration-500"
             style={{
               width: `${totalCount > 0 ? (masteredCount / totalCount) * 100 : 0}%`,
             }}
@@ -143,7 +143,7 @@ export default function VocabularyPage() {
             onClick={() => selectMasteryFilter(key)}
             className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
               masteryFilter === key
-                ? "bg-pastel-pink text-white shadow-sm"
+                ? "bg-gradient-primary text-white shadow-sm"
                 : "bg-white border border-pastel-border text-pastel-text-light hover:bg-pastel-pink-light/20"
             }`}
           >
@@ -168,7 +168,7 @@ export default function VocabularyPage() {
             }
             className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${
               selectedCategory === cat.key
-                ? "bg-pastel-green text-white shadow-sm"
+                ? "bg-gradient-success text-white shadow-sm"
                 : "bg-white border border-pastel-border text-pastel-text-light hover:bg-pastel-green-light/30"
             }`}
           >
@@ -217,7 +217,7 @@ export default function VocabularyPage() {
           {!searchQuery && (
             <button
               onClick={handleOpenAdd}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-pastel-pink text-white text-sm font-medium shadow-sm hover:bg-pastel-pink-dark transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-primary text-white text-sm font-medium shadow-sm hover:bg-gradient-primary-dark transition-colors"
             >
               <Plus size={16} />
               เพิ่มคำศัพท์

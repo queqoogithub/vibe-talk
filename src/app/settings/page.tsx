@@ -7,7 +7,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-9 h-9 rounded-xl bg-pastel-blue flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-gradient-periwinkle flex items-center justify-center shadow-md">
           <Settings size={20} className="text-white" />
         </div>
         <div>

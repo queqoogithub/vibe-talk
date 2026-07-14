@@ -11,7 +11,13 @@
     }
 
     body {
-        @apply bg-pastel-cream text-pastel-text antialiased;
+        @apply text-pastel-text antialiased;
+        background: linear-gradient(
+            170deg,
+            #f5f0ff 0%,
+            #ede4ff 40%,
+            #f0eafa 100%
+        );
         font-family:
             "Prompt",
             "Inter",
@@ -83,9 +89,72 @@
         animation: slide-up 0.3s ease-out;
     }
 
+    /* ── Gradient Utilities ── */
+
+    /* Primary action gradient — buttons, active states, icons */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #c9a8ff, #b388ff);
+    }
+
+    /* Darker primary for hover/pressed */
+    .bg-gradient-primary-dark {
+        background: linear-gradient(135deg, #b388ff, #9b6bff);
+    }
+
+    /* Periwinkle gradient — bot avatar, settings */
+    .bg-gradient-periwinkle {
+        background: linear-gradient(135deg, #d8e0f4, #a8b8e8);
+    }
+
+    /* Success gradient — vocabulary, mastered states */
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #d8e4f2, #b0c8e0);
+    }
+
+    /* Mauve gradient — user bubble */
+    .bg-gradient-mauve {
+        background: linear-gradient(135deg, #ede4ff, #c9a8ff);
+    }
+
+    /* Soft card gradient */
+    .bg-gradient-card {
+        background: linear-gradient(135deg, #ffffff, #fdfaff);
+    }
+
+    /* Navigation bar gradient */
+    .bg-gradient-nav {
+        background: linear-gradient(
+            to top,
+            rgba(255, 255, 255, 0.96),
+            rgba(245, 240, 255, 0.88)
+        );
+    }
+
+    /* Gradient border (via pseudo-element) */
+    .gradient-border {
+        position: relative;
+        background: linear-gradient(135deg, #ffffff, #fdfaff);
+        background-clip: padding-box;
+        border: 1px solid transparent;
+    }
+    .gradient-border::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, #c9a8ff, #b388ff, #a8b8e8);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
     /* Gradient text */
     .text-gradient {
-        background: linear-gradient(135deg, #f06080, #c49fff, #6aa8e8);
+        background: linear-gradient(135deg, #9b6bff, #b388ff, #c9a8ff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;

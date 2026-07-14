@@ -89,6 +89,23 @@
         animation: slide-up 0.3s ease-out;
     }
 
+    /* Logo blink glow effect */
+    @keyframes logo-blink {
+        0%,
+        100% {
+            filter: drop-shadow(0 0 6px rgba(179, 136, 255, 0.3));
+            transform: scale(1);
+        }
+        50% {
+            filter: drop-shadow(0 0 16px rgba(179, 136, 255, 0.7));
+            transform: scale(1.06);
+        }
+    }
+
+    .animate-logo-blink {
+        animation: logo-blink 2.4s ease-in-out infinite;
+    }
+
     /* ── Gradient Utilities ── */
 
     /* Primary action gradient — buttons, active states, icons */

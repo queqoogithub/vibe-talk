@@ -98,11 +98,11 @@ export default function ChatPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md overflow-hidden">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden animate-logo-blink">
             <img
               src="/icons/vb-logo-192.png"
               alt="Vibe Talk"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-xl"
             />
           </div>
           <div>

@@ -8,17 +8,17 @@ export default function manifest(): MetadataRoute.Manifest {
       "ฝึกสนทนาภาษาอังกฤษกับ AI Agent แบบมี context หลากหลายสถานการณ์",
     start_url: "/",
     display: "standalone",
-    background_color: "#F3EBE1",
-    theme_color: "#D4A574",
+    background_color: "#F5F0FF",
+    theme_color: "#B388FF",
     orientation: "portrait-primary",
     icons: [
       {
-        src: "/icons/vibe-talk-icon-192.png",
+        src: "/icons/vb-logo-192.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/icons/vibe-talk-icon-512.png",
+        src: "/icons/vb-logo-512.png",
         sizes: "512x512",
         type: "image/png",
       },

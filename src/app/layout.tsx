@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   description:
     "ฝึกสนทนาภาษาอังกฤษกับ AI Agent ในสถานการณ์จำลอง พร้อมตรวจแกรมม่า และติดตามพัฒนาการ",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/vb-logo-192.png",
+    apple: "/icons/vb-logo-192.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -34,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="th">
       <head>
-        <link rel="apple-touch-icon" href="/icons/vibe-talk-icon-192.png" />
+        <link rel="apple-touch-icon" href="/icons/vb-logo-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>

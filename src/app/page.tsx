@@ -17,7 +17,6 @@ import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
 import ConversationList from "@/components/ConversationList";
 import {
-  Sparkles,
   MessageCircle,
   History,
   X,
@@ -99,8 +98,12 @@ export default function ChatPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md">
-            <Sparkles size={20} className="text-white" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md overflow-hidden">
+            <img
+              src="/icons/vb-logo-192.png"
+              alt="Vibe Talk"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gradient">Vibe Talk</h1>

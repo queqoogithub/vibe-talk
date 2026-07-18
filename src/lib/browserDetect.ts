@@ -66,46 +66,32 @@ export function detectInAppBrowser(): {
 
 /**
  * Attempt to open the current URL in the external browser.
- * Returns true if the browser was successfully launched.
+ * Returns the method used so the UI can show appropriate feedback.
  */
-export function openInExternalBrowser(): boolean {
-  if (typeof window === "undefined") return false;
+export function openInExternalBrowser(): {
+  launched: boolean;
+  method: "intent" | "clipboard";
+} {
+  if (typeof window === "undefined")
+    return { launched: false, method: "clipboard" };
 
   const url = window.location.href;
-  const { isIOS, isAndroid } = detectInAppBrowser();
+  const { isAndroid } = detectInAppBrowser();
 
   if (isAndroid) {
-    // Android: try opening in Chrome via intent
-    const intentUrl = `intent://${window.location.host}${window.location.pathname}${window.location.search}${window.location.hash}#Intent;scheme=https;package=com.android.chrome;end`;
+    // Android: intent:// without package restriction → user picks browser
+    const intentUrl = `intent://${window.location.host}${window.location.pathname}${window.location.search}${window.location.hash}#Intent;scheme=https;end`;
     try {
       window.location.href = intentUrl;
-      return true;
+      return { launched: true, method: "intent" };
     } catch {
-      // Fallback: copy URL
-      copyToClipboard(url);
-      return false;
+      // fallback
     }
   }
 
-  if (isIOS) {
-    // iOS: try googlechrome:// scheme
-    try {
-      const chromeUrl = url.replace(/^https?:\/\//, "googlechrome://");
-      window.location.href = chromeUrl;
-      return true;
-    } catch {
-      // Fallback: show share sheet
-      if (navigator.share) {
-        navigator.share({ url });
-        return true;
-      }
-      copyToClipboard(url);
-      return false;
-    }
-  }
-
+  // iOS / desktop / fallback: copy URL to clipboard
   copyToClipboard(url);
-  return false;
+  return { launched: false, method: "clipboard" };
 }
 
 function copyToClipboard(text: string) {

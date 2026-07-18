@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { detectInAppBrowser, openInExternalBrowser } from "@/lib/browserDetect";
-import { ExternalLink, X, Copy, CheckCircle2 } from "lucide-react";
+import { ExternalLink, X, CheckCircle2, Copy } from "lucide-react";
 
 export default function OpenInBrowserBanner() {
   const [show, setShow] = useState(false);
   const [browserName, setBrowserName] = useState<string | null>(null);
+  const [isIOS, setIsIOS] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -14,20 +15,26 @@ export default function OpenInBrowserBanner() {
     const info = detectInAppBrowser();
     if (info.isInApp) {
       setBrowserName(info.name);
-      // Delay slightly to let page render
+      setIsIOS(info.isIOS);
       setTimeout(() => setShow(true), 800);
     }
   }, []);
 
+  const targetBrowser = isIOS ? "Safari" : "Chrome";
+
   const handleOpenBrowser = () => {
-    const launched = openInExternalBrowser();
-    if (!launched) {
-      // Fallback: copy URL
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      });
+    const result = openInExternalBrowser();
+
+    if (result.launched && result.method === "intent") {
+      // Android: intent opened successfully
+      return;
     }
+
+    // iOS / fallback: URL copied to clipboard
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
   };
 
   const handleDismiss = () => {
@@ -50,7 +57,7 @@ export default function OpenInBrowserBanner() {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-pastel-text mb-0.5">
-                เปิดใน Chrome / Safari เพื่อประสบการณ์ที่ดีกว่า
+                เปิดใน {targetBrowser} เพื่อประสบการณ์ที่ดีกว่า
               </p>
               <p className="text-[11px] text-pastel-text-light leading-relaxed">
                 {browserName
@@ -67,12 +74,17 @@ export default function OpenInBrowserBanner() {
                   {copied ? (
                     <>
                       <CheckCircle2 size={13} />
-                      คัดลอกแล้ว!
+                      คัดลอกลิงก์แล้ว! วางใน {targetBrowser}
+                    </>
+                  ) : isIOS ? (
+                    <>
+                      <Copy size={13} />
+                      คัดลอกลิงก์ ไปวางใน {targetBrowser}
                     </>
                   ) : (
                     <>
                       <ExternalLink size={13} />
-                      เปิดในเบราว์เซอร์
+                      เปิดใน {targetBrowser}
                     </>
                   )}
                 </button>

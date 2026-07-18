@@ -54,7 +54,7 @@ export default function ConversationList({
             }`}
             onClick={() => onSelect(session)}
           >
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-primary/20 flex items-center justify-center">
+            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-pastel-purple-light/50 flex items-center justify-center">
               <MessageSquare size={18} className="text-pastel-pink-dark" />
             </div>
 

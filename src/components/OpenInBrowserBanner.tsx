@@ -50,7 +50,7 @@ export default function OpenInBrowserBanner() {
         <div className="bg-gradient-to-r from-pastel-yellow-light/95 to-pastel-purple-light/90 backdrop-blur-md border border-pastel-yellow/40 rounded-2xl p-3.5 shadow-lg">
           <div className="flex items-start gap-3">
             {/* Icon */}
-            <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-primary/20 flex items-center justify-center mt-0.5">
+            <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-pastel-purple-light/50 flex items-center justify-center mt-0.5">
               <ExternalLink size={16} className="text-pastel-pink-dark" />
             </div>
 

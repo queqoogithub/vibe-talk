@@ -42,7 +42,7 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-pastel-pink-light/50 flex items-center justify-center">
               <AlertTriangle size={16} className="text-pastel-pink-dark" />
             </div>
             <span className="text-xs text-pastel-text-light">Total Errors</span>
@@ -52,7 +52,7 @@ export default function ErrorDashboard({ dashboard, onReset }: Props) {
 
         <div className="bg-gradient-card rounded-2xl border border-pastel-border p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-periwinkle/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-pastel-blue-light/50 flex items-center justify-center">
               <MessageSquare size={16} className="text-pastel-blue-dark" />
             </div>
             <span className="text-xs text-pastel-text-light">

@@ -180,7 +180,7 @@ export default function ChatPage() {
           >
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-primary/20 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-pastel-purple-light/40 flex items-center justify-center mb-4">
                   <MessageCircle size={32} className="text-pastel-pink-dark" />
                 </div>
                 <h2 className="text-base font-semibold text-pastel-text mb-1">

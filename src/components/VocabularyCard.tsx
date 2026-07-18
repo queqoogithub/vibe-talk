@@ -123,7 +123,7 @@ export default function VocabularyCard({
             {isMastered ? (
               <button
                 onClick={() => onUnmarkMastered(word.word)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-success/80 text-white text-xs font-medium hover:bg-gradient-success transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-success text-white text-xs font-medium hover:opacity-80 transition-opacity"
               >
                 <CheckCircle2 size={14} />
                 รู้แล้ว
@@ -131,7 +131,7 @@ export default function VocabularyCard({
             ) : (
               <button
                 onClick={() => onMarkMastered(word.word)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-primary/15 text-pastel-pink-dark text-xs font-medium hover:bg-gradient-primary hover:text-white transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-pastel-purple-light/40 text-pastel-pink-dark text-xs font-medium hover:bg-gradient-primary hover:text-white transition-all"
               >
                 <Circle size={14} />
                 ยังไม่รู้
@@ -151,8 +151,8 @@ export default function VocabularyCard({
               disabled={speaking}
               className={`p-2 rounded-xl transition-all ${
                 speaking
-                  ? "bg-gradient-primary/30 text-pastel-pink-dark animate-pulse"
-                  : "bg-gradient-periwinkle/25 text-pastel-blue-dark hover:bg-gradient-periwinkle/50 hover:scale-110"
+                  ? "bg-pastel-pink-light/50 text-pastel-pink-dark animate-pulse"
+                  : "bg-pastel-blue-light/50 text-pastel-blue-dark hover:bg-pastel-blue-light hover:scale-110"
               }`}
               title="ฟังเสียงคำศัพท์"
             >
@@ -188,7 +188,7 @@ export default function VocabularyCard({
               {word.examples.map((ex, idx) => (
                 <div
                   key={idx}
-                  className="bg-gradient-periwinkle/15 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
+                  className="bg-pastel-blue-light/30 rounded-xl p-3 text-sm text-pastel-text leading-relaxed"
                 >
                   {ex}
                 </div>

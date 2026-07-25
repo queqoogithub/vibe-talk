@@ -63,7 +63,7 @@ Be strict about real English words. Proper nouns and brand names are acceptable.
         content: word,
       },
     ],
-    model: "deepseek-chat",
+    model: "deepseek-v4-flash",
     stream: false,
     temperature: 0.1,
     max_tokens: 200,
@@ -120,7 +120,7 @@ Example output:
         content: `Word: ${word}`,
       },
     ],
-    model: "deepseek-chat",
+    model: "deepseek-v4-flash",
     stream: false,
     temperature: 0.3,
   });
@@ -234,7 +234,7 @@ export async function sendMessage(
 
   const completion = await client.chat.completions.create({
     messages: apiMessages,
-    model: "deepseek-chat",
+    model: "deepseek-v4-flash",
     stream: false,
   });
 
@@ -276,7 +276,7 @@ export async function generateAIHandoffSummary(
         content: `Scenario: ${scenario}\n\nConversation:\n${conversationText}`,
       },
     ],
-    model: "deepseek-chat",
+    model: "deepseek-v4-flash",
     stream: false,
   });
 

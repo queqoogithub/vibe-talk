@@ -106,7 +106,7 @@ export default function ChatPage() {
             />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gradient">Vibe Talk</h1>
+            <h1 className="text-lg font-bold italic text-gradient">Vibe Talk</h1>
             <p className="text-[10px] text-pastel-text-light">
               AI English Practice
             </p>

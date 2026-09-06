@@ -12,6 +12,7 @@ import {
   Loader2,
   AlertTriangle,
   CheckCircle2,
+  RotateCcw,
 } from "lucide-react";
 
 interface Props {
@@ -21,7 +22,15 @@ interface Props {
     word: Omit<UserVocabWord, "id" | "createdAt"> | UserVocabWord,
   ) => void;
   editWord?: UserVocabWord | null;
-  isDuplicate: (word: string, excludeId?: string) => boolean;
+  /** Find an existing word entry (case-insensitive), used for duplicate detection. */
+  findExisting: (
+    word: string,
+    excludeId?: string,
+  ) => UserVocabWord | undefined;
+  /** Whether a stored word is currently in the "รู้แล้ว" (mastered) list. */
+  isWordMastered: (word: string) => boolean;
+  /** Move an existing mastered word back to "ยังไม่รู้" (relearn). */
+  onRelearn: (word: string) => void;
 }
 
 const CATEGORY_OPTIONS = Object.entries(VOCAB_CATEGORY_LABELS) as [
@@ -34,7 +43,9 @@ export default function AddWordModal({
   onClose,
   onSave,
   editWord,
-  isDuplicate,
+  findExisting,
+  isWordMastered,
+  onRelearn,
 }: Props) {
   const [word, setWord] = useState("");
   const [phonetic, setPhonetic] = useState("");
@@ -55,6 +66,9 @@ export default function AddWordModal({
   // Duplicate warning
   const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
   const dismissedDuplicate = useRef(false);
+  // Existing word that was already marked as "รู้แล้ว" (mastered)
+  const [masteredDuplicate, setMasteredDuplicate] =
+    useState<UserVocabWord | null>(null);
 
   const isEditing = !!editWord;
 
@@ -80,15 +94,25 @@ export default function AddWordModal({
     lastCheckedWord.current = "";
     setDuplicateWarning(null);
     dismissedDuplicate.current = false;
+    setMasteredDuplicate(null);
   }, [editWord, isOpen]);
 
   const checkDuplicate = (w: string): boolean => {
     const excludeId = editWord?.id;
-    if (isDuplicate(w, excludeId)) {
+    const existing = findExisting(w, excludeId);
+    if (existing) {
+      // ถ้าคำนั้นอยู่ในลิสต์ "รู้แล้ว" → เสนอให้ย้ายกลับไป "ยังไม่รู้" แทนการเพิ่มคำซ้ำ
+      if (!isEditing && isWordMastered(existing.word)) {
+        setDuplicateWarning(null);
+        setMasteredDuplicate(existing);
+        return true;
+      }
+      setMasteredDuplicate(null);
       setDuplicateWarning(`คำว่า "${w.trim()}" มีอยู่ในคลังคำศัพท์แล้ว`);
       return true;
     }
     setDuplicateWarning(null);
+    setMasteredDuplicate(null);
     return false;
   };
 
@@ -124,11 +148,11 @@ export default function AddWordModal({
       setSpellSuggestions([]);
       setSpellCorrect(null);
     }
-    // Clear duplicate warning when user types
-    if (duplicateWarning) {
-      setDuplicateWarning(null);
-      dismissedDuplicate.current = false;
-    }
+    // ตรวจคำซ้ำแบบ real-time ขณะพิมพ์
+    // เพื่อให้เห็นป้าย "รู้แล้ว → ย้ายกลับไปยังไม่รู้" ได้ทันที
+    // โดยไม่ต้องรอ submit (ไม่งั้น native validation จะบล็อกก่อน)
+    dismissedDuplicate.current = false;
+    checkDuplicate(value);
   };
 
   const handleWordBlur = () => {
@@ -208,10 +232,21 @@ export default function AddWordModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!word.trim() || !thaiMeaning.trim()) return;
+    if (!word.trim()) return;
 
-    // Check duplicate before saving
+    // คำอยู่ในลิสต์ "รู้แล้ว" แล้ว → ย้ายกลับไป "ยังไม่รู้"
+    // (ยืนยันผ่านปุ่ม submit ที่เปลี่ยนชื่อแล้ว จะไม่สร้างรายการซ้ำ)
+    if (masteredDuplicate) {
+      onRelearn(masteredDuplicate.word);
+      onClose();
+      return;
+    }
+
+    // ตรวจคำซ้ำก่อนบังคับกรอกความหมาย
+    // เพื่อให้เจอคำที่อยู่ใน "รู้แล้ว" ได้แม้ยังกรอกไม่ครบ
     if (!dismissedDuplicate.current && checkDuplicate(word)) return;
+
+    if (!thaiMeaning.trim()) return;
 
     const filteredExamples = examples.filter((ex) => ex.trim() !== "");
     const wordData = {
@@ -330,6 +365,23 @@ export default function AddWordModal({
                     เพิ่มต่อไป (ไม่สนใจ)
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* Mastered duplicate → relearn instead of duplicate add */}
+            {masteredDuplicate && !isEditing && (
+              <div className="mt-2 p-3 rounded-xl bg-pastel-purple-light/50 border border-pastel-purple-light">
+                <p className="text-xs font-semibold text-pastel-purple-dark flex items-start gap-1.5">
+                  <RotateCcw size={13} className="flex-shrink-0 mt-0.5" />
+                  <span>
+                    “{masteredDuplicate.word}” มีอยู่ในคลังแล้ว
+                    และอยู่ในสถานะ “รู้แล้ว”
+                  </span>
+                </p>
+                <p className="text-[11px] text-pastel-text-light mt-1 ml-[22px]">
+                  กดปุ่ม “ย้ายกลับไปยังไม่รู้” ด้านล่างเพื่อนำกลับมาฝึกใหม่
+                  (จะไม่เพิ่มคำซ้ำ)
+                </p>
               </div>
             )}
 
@@ -487,9 +539,20 @@ export default function AddWordModal({
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-success text-white font-semibold text-sm hover:opacity-90 transition-opacity mb-4"
+            // กรณีคำซ้ำใน "รู้แล้ว" → ย้ายกลับไปยังไม่รู้ ไม่ต้องกรอกความหมาย
+            // จึงข้าม native validation ของช่อง required
+            formNoValidate={!isEditing && !!masteredDuplicate}
+            className={`w-full py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity mb-4 ${
+              masteredDuplicate && !isEditing
+                ? "bg-gradient-primary shadow-lg shadow-pastel-pink/30"
+                : "bg-gradient-success"
+            }`}
           >
-            {isEditing ? "บันทึกการแก้ไข" : "บันทึกคำศัพท์"}
+            {isEditing
+              ? "บันทึกการแก้ไข"
+              : masteredDuplicate
+                ? "ย้ายกลับไปยังไม่รู้"
+                : "บันทึกคำศัพท์"}
           </button>
         </form>
       </div>

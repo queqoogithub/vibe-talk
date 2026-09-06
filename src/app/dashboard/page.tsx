@@ -14,7 +14,7 @@ export default function DashboardPage() {
           <BarChart3 size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-gradient">Error Dashboard</h1>
+          <h1 className="text-lg font-bold italic text-gradient">Error Dashboard</h1>
           <p className="text-[10px] text-pastel-text-light">
             ติดตามจุดที่ควรพัฒนา
           </p>

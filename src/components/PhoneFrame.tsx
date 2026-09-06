@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BottomNav from "./BottomNav";
 import PwaInstallModal from "./PwaInstallModal";
 import OpenInBrowserBanner from "./OpenInBrowserBanner";
-import { usePwaInstall } from "@/hooks/usePwaInstall";
+import {
+  usePwaInstall,
+  PwaInstallContext,
+  type PwaInstallContextValue,
+} from "@/hooks/usePwaInstall";
 
 export default function PhoneFrame({
   children,
@@ -12,7 +16,17 @@ export default function PhoneFrame({
   children: React.ReactNode;
 }) {
   const [isStandalone, setIsStandalone] = useState(false);
-  const { showModal, install, dismiss } = usePwaInstall();
+  const pwa = usePwaInstall();
+  const { showModal, install, dismiss } = pwa;
+
+  const installCtx = useMemo<PwaInstallContextValue>(
+    () => ({
+      canInstall: pwa.canInstall,
+      isStandalone: pwa.isStandalone,
+      install: pwa.install,
+    }),
+    [pwa.canInstall, pwa.isStandalone, pwa.install]
+  );
 
   useEffect(() => {
     const mq = window.matchMedia("(display-mode: standalone)");
@@ -35,7 +49,7 @@ export default function PhoneFrame({
   );
 
   return (
-    <>
+    <PwaInstallContext.Provider value={installCtx}>
       {/* PWA Install Modal */}
       {showModal && <PwaInstallModal onInstall={install} onDismiss={dismiss} />}
 
@@ -100,6 +114,6 @@ export default function PhoneFrame({
           </div>
         )}
       </div>
-    </>
+    </PwaInstallContext.Provider>
   );
 }

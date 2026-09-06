@@ -40,11 +40,12 @@ export default function VocabularyPage() {
     addWord,
     editWord,
     removeWord,
-    isDuplicate,
+    findExisting,
   } = useVocabulary();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingWord, setEditingWord] = useState<UserVocabWord | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const handleOpenAdd = () => {
     setEditingWord(null);
@@ -66,6 +67,14 @@ export default function VocabularyPage() {
     }
   };
 
+  // Word already exists in the "รู้แล้ว" (mastered) list → move it back to
+  // "ยังไม่รู้" for relearning instead of creating a duplicate entry.
+  const handleRelearn = (word: string) => {
+    unmarkMastered(word);
+    setNotice(`ย้ายคำว่า “${word}” กลับไป “ยังไม่รู้” เพื่อฝึกใหม่แล้ว`);
+    setTimeout(() => setNotice(null), 3000);
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -74,7 +83,7 @@ export default function VocabularyPage() {
           <BookOpen size={20} className="text-white" />
         </div>
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-gradient">Vocabulary</h1>
+          <h1 className="text-lg font-bold italic text-gradient">Vocabulary</h1>
           <p className="text-[10px] text-pastel-text-light">
             บันทึกคำศัพท์และตัวอย่างประโยคของคุณเอง
           </p>
@@ -87,6 +96,14 @@ export default function VocabularyPage() {
           <Plus size={20} />
         </button>
       </div>
+
+      {/* Relearn notice */}
+      {notice && (
+        <div className="mb-1 flex items-center gap-1.5 p-3 rounded-2xl bg-pastel-green-light/60 border border-pastel-green/30 text-xs font-medium text-pastel-green">
+          <CheckCircle2 size={14} className="flex-shrink-0" />
+          {notice}
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative">
@@ -232,7 +249,9 @@ export default function VocabularyPage() {
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
         editWord={editingWord}
-        isDuplicate={isDuplicate}
+        findExisting={findExisting}
+        isWordMastered={isMastered}
+        onRelearn={handleRelearn}
       />
     </div>
   );

@@ -165,6 +165,17 @@ export function useVocabulary() {
     [allWords],
   );
 
+  // Find the existing entry for a word (case-insensitive)
+  const findExisting = useCallback(
+    (word: string, excludeId?: string): UserVocabWord | undefined => {
+      const lower = word.trim().toLowerCase();
+      return allWords.find(
+        (w) => w.word.toLowerCase() === lower && w.id !== excludeId,
+      );
+    },
+    [allWords],
+  );
+
   return {
     selectedCategory,
     masteryFilter,
@@ -191,5 +202,6 @@ export function useVocabulary() {
     editWord,
     removeWord,
     isDuplicate,
+    findExisting,
   };
 }
